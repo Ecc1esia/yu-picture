@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.ecc1esia.picture.infrastructure.dao.PictureDao">
+
+    <resultMap type="com.github.ecc1esia.picture.domain.picture.entity.Picture" id="PictureMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="introduction" column="introduction" jdbcType="VARCHAR"/>
+        <result property="category" column="category" jdbcType="VARCHAR"/>
+        <result property="tags" column="tags" jdbcType="VARCHAR"/>
+        <result property="picsize" column="picSize" jdbcType="INTEGER"/>
+        <result property="picwidth" column="picWidth" jdbcType="INTEGER"/>
+        <result property="picheight" column="picHeight" jdbcType="INTEGER"/>
+        <result property="picscale" column="picScale" jdbcType="VARCHAR"/>
+        <result property="picformat" column="picFormat" jdbcType="VARCHAR"/>
+        <result property="userid" column="userId" jdbcType="INTEGER"/>
+        <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="edittime" column="editTime" jdbcType="TIMESTAMP"/>
+        <result property="updatetime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isdelete" column="isDelete" jdbcType="INTEGER"/>
+        <result property="reviewstatus" column="reviewStatus" jdbcType="INTEGER"/>
+        <result property="reviewmessage" column="reviewMessage" jdbcType="VARCHAR"/>
+        <result property="reviewerid" column="reviewerId" jdbcType="INTEGER"/>
+        <result property="reviewtime" column="reviewTime" jdbcType="TIMESTAMP"/>
+        <result property="thumbnailurl" column="thumbnailUrl" jdbcType="VARCHAR"/>
+        <result property="spaceid" column="spaceId" jdbcType="INTEGER"/>
+        <result property="piccolor" column="picColor" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PictureMap">
+        select
+id, url, name, introduction, category, tags, picSize, picWidth, picHeight, picScale, picFormat, userId, createTime, editTime, updateTime, isDelete, reviewStatus, reviewMessage, reviewerId, reviewTime, thumbnailUrl, spaceId, picColor
+        from picture
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="PictureMap">
+        select
+id, url, name, introduction, category, tags, picSize, picWidth, picHeight, picScale, picFormat, userId, createTime, editTime, updateTime, isDelete, reviewStatus, reviewMessage, reviewerId, reviewTime, thumbnailUrl, spaceId, picColor
+        from picture
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="url != null and url != ''">
+                and url = #{url}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="introduction != null and introduction != ''">
+                and introduction = #{introduction}
+            </if>
+            <if test="category != null and category != ''">
+                and category = #{category}
+            </if>
+            <if test="tags != null and tags != ''">
+                and tags = #{tags}
+            </if>
+            <if test="picsize != null">
+                and picSize = #{picsize}
+            </if>
+            <if test="picwidth != null">
+                and picWidth = #{picwidth}
+            </if>
+            <if test="picheight != null">
+                and picHeight = #{picheight}
+            </if>
+            <if test="picscale != null">
+                and picScale = #{picscale}
+            </if>
+            <if test="picformat != null and picformat != ''">
+                and picFormat = #{picformat}
+            </if>
+            <if test="userid != null">
+                and userId = #{userid}
+            </if>
+            <if test="createtime != null">
+                and createTime = #{createtime}
+            </if>
+            <if test="edittime != null">
+                and editTime = #{edittime}
+            </if>
+            <if test="updatetime != null">
+                and updateTime = #{updatetime}
+            </if>
+            <if test="isdelete != null">
+                and isDelete = #{isdelete}
+            </if>
+            <if test="reviewstatus != null">
+                and reviewStatus = #{reviewstatus}
+            </if>
+            <if test="reviewmessage != null and reviewmessage != ''">
+                and reviewMessage = #{reviewmessage}
+            </if>
+            <if test="reviewerid != null">
+                and reviewerId = #{reviewerid}
+            </if>
+            <if test="reviewtime != null">
+                and reviewTime = #{reviewtime}
+            </if>
+            <if test="thumbnailurl != null and thumbnailurl != ''">
+                and thumbnailUrl = #{thumbnailurl}
+            </if>
+            <if test="spaceid != null">
+                and spaceId = #{spaceid}
+            </if>
+            <if test="piccolor != null and piccolor != ''">
+                and picColor = #{piccolor}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from picture
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="url != null and url != ''">
+                and url = #{url}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="introduction != null and introduction != ''">
+                and introduction = #{introduction}
+            </if>
+            <if test="category != null and category != ''">
+                and category = #{category}
+            </if>
+            <if test="tags != null and tags != ''">
+                and tags = #{tags}
+            </if>
+            <if test="picsize != null">
+                and picSize = #{picsize}
+            </if>
+            <if test="picwidth != null">
+                and picWidth = #{picwidth}
+            </if>
+            <if test="picheight != null">
+                and picHeight = #{picheight}
+            </if>
+            <if test="picscale != null">
+                and picScale = #{picscale}
+            </if>
+            <if test="picformat != null and picformat != ''">
+                and picFormat = #{picformat}
+            </if>
+            <if test="userid != null">
+                and userId = #{userid}
+            </if>
+            <if test="createtime != null">
+                and createTime = #{createtime}
+            </if>
+            <if test="edittime != null">
+                and editTime = #{edittime}
+            </if>
+            <if test="updatetime != null">
+                and updateTime = #{updatetime}
+            </if>
+            <if test="isdelete != null">
+                and isDelete = #{isdelete}
+            </if>
+            <if test="reviewstatus != null">
+                and reviewStatus = #{reviewstatus}
+            </if>
+            <if test="reviewmessage != null and reviewmessage != ''">
+                and reviewMessage = #{reviewmessage}
+            </if>
+            <if test="reviewerid != null">
+                and reviewerId = #{reviewerid}
+            </if>
+            <if test="reviewtime != null">
+                and reviewTime = #{reviewtime}
+            </if>
+            <if test="thumbnailurl != null and thumbnailurl != ''">
+                and thumbnailUrl = #{thumbnailurl}
+            </if>
+            <if test="spaceid != null">
+                and spaceId = #{spaceid}
+            </if>
+            <if test="piccolor != null and piccolor != ''">
+                and picColor = #{piccolor}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into picture(url, name, introduction, category, tags, picSize, picWidth, picHeight, picScale, picFormat, userId, createTime, editTime, updateTime, isDelete, reviewStatus, reviewMessage, reviewerId, reviewTime, thumbnailUrl, spaceId, picColor)
+        values (#{url}, #{name}, #{introduction}, #{category}, #{tags}, #{picsize}, #{picwidth}, #{picheight}, #{picscale}, #{picformat}, #{userid}, #{createtime}, #{edittime}, #{updatetime}, #{isdelete}, #{reviewstatus}, #{reviewmessage}, #{reviewerid}, #{reviewtime}, #{thumbnailurl}, #{spaceid}, #{piccolor})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into picture(url, name, introduction, category, tags, picSize, picWidth, picHeight, picScale, picFormat, userId, createTime, editTime, updateTime, isDelete, reviewStatus, reviewMessage, reviewerId, reviewTime, thumbnailUrl, spaceId, picColor)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.url}, #{entity.name}, #{entity.introduction}, #{entity.category}, #{entity.tags}, #{entity.picsize}, #{entity.picwidth}, #{entity.picheight}, #{entity.picscale}, #{entity.picformat}, #{entity.userid}, #{entity.createtime}, #{entity.edittime}, #{entity.updatetime}, #{entity.isdelete}, #{entity.reviewstatus}, #{entity.reviewmessage}, #{entity.reviewerid}, #{entity.reviewtime}, #{entity.thumbnailurl}, #{entity.spaceid}, #{entity.piccolor})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into picture(url, name, introduction, category, tags, picSize, picWidth, picHeight, picScale, picFormat, userId, createTime, editTime, updateTime, isDelete, reviewStatus, reviewMessage, reviewerId, reviewTime, thumbnailUrl, spaceId, picColor)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.url}, #{entity.name}, #{entity.introduction}, #{entity.category}, #{entity.tags}, #{entity.picsize}, #{entity.picwidth}, #{entity.picheight}, #{entity.picscale}, #{entity.picformat}, #{entity.userid}, #{entity.createtime}, #{entity.edittime}, #{entity.updatetime}, #{entity.isdelete}, #{entity.reviewstatus}, #{entity.reviewmessage}, #{entity.reviewerid}, #{entity.reviewtime}, #{entity.thumbnailurl}, #{entity.spaceid}, #{entity.piccolor})
+        </foreach>
+        on duplicate key update
+url = values(url),
+name = values(name),
+introduction = values(introduction),
+category = values(category),
+tags = values(tags),
+picSize = values(picSize),
+picWidth = values(picWidth),
+picHeight = values(picHeight),
+picScale = values(picScale),
+picFormat = values(picFormat),
+userId = values(userId),
+createTime = values(createTime),
+editTime = values(editTime),
+updateTime = values(updateTime),
+isDelete = values(isDelete),
+reviewStatus = values(reviewStatus),
+reviewMessage = values(reviewMessage),
+reviewerId = values(reviewerId),
+reviewTime = values(reviewTime),
+thumbnailUrl = values(thumbnailUrl),
+spaceId = values(spaceId),
+picColor = values(picColor)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update picture
+        <set>
+            <if test="url != null and url != ''">
+                url = #{url},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="introduction != null and introduction != ''">
+                introduction = #{introduction},
+            </if>
+            <if test="category != null and category != ''">
+                category = #{category},
+            </if>
+            <if test="tags != null and tags != ''">
+                tags = #{tags},
+            </if>
+            <if test="picsize != null">
+                picSize = #{picsize},
+            </if>
+            <if test="picwidth != null">
+                picWidth = #{picwidth},
+            </if>
+            <if test="picheight != null">
+                picHeight = #{picheight},
+            </if>
+            <if test="picscale != null">
+                picScale = #{picscale},
+            </if>
+            <if test="picformat != null and picformat != ''">
+                picFormat = #{picformat},
+            </if>
+            <if test="userid != null">
+                userId = #{userid},
+            </if>
+            <if test="createtime != null">
+                createTime = #{createtime},
+            </if>
+            <if test="edittime != null">
+                editTime = #{edittime},
+            </if>
+            <if test="updatetime != null">
+                updateTime = #{updatetime},
+            </if>
+            <if test="isdelete != null">
+                isDelete = #{isdelete},
+            </if>
+            <if test="reviewstatus != null">
+                reviewStatus = #{reviewstatus},
+            </if>
+            <if test="reviewmessage != null and reviewmessage != ''">
+                reviewMessage = #{reviewmessage},
+            </if>
+            <if test="reviewerid != null">
+                reviewerId = #{reviewerid},
+            </if>
+            <if test="reviewtime != null">
+                reviewTime = #{reviewtime},
+            </if>
+            <if test="thumbnailurl != null and thumbnailurl != ''">
+                thumbnailUrl = #{thumbnailurl},
+            </if>
+            <if test="spaceid != null">
+                spaceId = #{spaceid},
+            </if>
+            <if test="piccolor != null and piccolor != ''">
+                picColor = #{piccolor},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from picture where id = #{id}
+    </delete>
+
+</mapper>
+

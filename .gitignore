@@ -1,0 +1,103 @@
+# 忽略 IDE 相关文件
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# 忽略编译输出目录
+/target/
+/dist/
+/dist-ssr/
+
+# 忽略日志文件
+logs/
+*.log
+
+# 忽略 Maven 本地仓库缓存
+repository/
+
+# 忽略 Node.js 依赖
+node_modules/
+
+# 忽略包管理器锁文件
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 忽略 IntelliJ IDEA 缓存
+*.class
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.swn
+*.swm
+*.swa
+*.swx
+*.swp
+*.swo
+*.swn
+*.swm
+*.swa
+*.swx
+*.swp
+*.swo
+*.swn
+*.swm
+*.swa
+*.swx
+*.swp
+*.swo
+*.swn
+*.swm
+*.swa
+*.swx
+*.swp
+*.swo
+*.swn
+*.swm
+*.swa
+*.swx
+
+# 忽略 WebStorm 缓存
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/libraries
+.idea/modules.xml
+.idea/vcs.xml
+
+# 忽略 macOS 相关文件
+.DS_Store
+
+# 忽略 Windows 相关文件
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 忽略其他临时文件
+*.tmp
+*.bak
+*.swp
+*.swo
+*.swn
+*.swm
+*.swa
+*.swx
+*.swp
+*.swo
+*.swn
+*.swm
+*.swa
+*.swx
+*.swp
+*.swo
+*.swn
+*.swm
+*.swa
+*.swx
+
+# 忽略覆盖率报告
+coverage/

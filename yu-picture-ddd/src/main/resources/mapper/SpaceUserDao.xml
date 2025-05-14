@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.ecc1esia.picture.infrastructure.dao.SpaceUserDao">
+
+    <resultMap type="com.github.ecc1esia.picture.domain.space.entity.SpaceUser" id="SpaceUserMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="spaceid" column="spaceId" jdbcType="INTEGER"/>
+        <result property="userid" column="userId" jdbcType="INTEGER"/>
+        <result property="spacerole" column="spaceRole" jdbcType="VARCHAR"/>
+        <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updatetime" column="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SpaceUserMap">
+        select
+id, spaceId, userId, spaceRole, createTime, updateTime
+        from space_user
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SpaceUserMap">
+        select
+id, spaceId, userId, spaceRole, createTime, updateTime
+        from space_user
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="spaceid != null">
+                and spaceId = #{spaceid}
+            </if>
+            <if test="userid != null">
+                and userId = #{userid}
+            </if>
+            <if test="spacerole != null and spacerole != ''">
+                and spaceRole = #{spacerole}
+            </if>
+            <if test="createtime != null">
+                and createTime = #{createtime}
+            </if>
+            <if test="updatetime != null">
+                and updateTime = #{updatetime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from space_user
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="spaceid != null">
+                and spaceId = #{spaceid}
+            </if>
+            <if test="userid != null">
+                and userId = #{userid}
+            </if>
+            <if test="spacerole != null and spacerole != ''">
+                and spaceRole = #{spacerole}
+            </if>
+            <if test="createtime != null">
+                and createTime = #{createtime}
+            </if>
+            <if test="updatetime != null">
+                and updateTime = #{updatetime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into space_user(spaceId, userId, spaceRole, createTime, updateTime)
+        values (#{spaceid}, #{userid}, #{spacerole}, #{createtime}, #{updatetime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into space_user(spaceId, userId, spaceRole, createTime, updateTime)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.spaceid}, #{entity.userid}, #{entity.spacerole}, #{entity.createtime}, #{entity.updatetime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into space_user(spaceId, userId, spaceRole, createTime, updateTime)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.spaceid}, #{entity.userid}, #{entity.spacerole}, #{entity.createtime}, #{entity.updatetime})
+        </foreach>
+        on duplicate key update
+spaceId = values(spaceId),
+userId = values(userId),
+spaceRole = values(spaceRole),
+createTime = values(createTime),
+updateTime = values(updateTime)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update space_user
+        <set>
+            <if test="spaceid != null">
+                spaceId = #{spaceid},
+            </if>
+            <if test="userid != null">
+                userId = #{userid},
+            </if>
+            <if test="spacerole != null and spacerole != ''">
+                spaceRole = #{spacerole},
+            </if>
+            <if test="createtime != null">
+                createTime = #{createtime},
+            </if>
+            <if test="updatetime != null">
+                updateTime = #{updatetime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from space_user where id = #{id}
+    </delete>
+
+</mapper>
+
