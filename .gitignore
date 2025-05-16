@@ -101,3 +101,5 @@ Desktop.ini
 
 # 忽略覆盖率报告
 coverage/
+
+application.yml
