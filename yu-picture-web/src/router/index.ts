@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import UserLoginPage from '@/pages/user/UserLoginPage.vue'
 import UserRegisterPage from '@/pages/user/UserRegisterPage.vue'
 import UserManagePage from '@/pages/admin/UserManagePage.vue'
+import PictureDetailPage from '@/pages/PictureDetailPage.vue'
+import SearchPicturePage from '@/pages/SearchPicturePage.vue'
 import HomePage from '@/pages/HomePage.vue'
 import AddPicturePage from '@/pages/AddPicturePage.vue'
 
@@ -54,12 +56,12 @@ const router = createRouter({
     //   name: '批量创建图片',
     //   component: AddPictureBatchPage,
     // },
-    // {todo
-    //   path: '/picture/:id',
-    //   name: '图片详情',
-    //   component: PictureDetailPage,
-    //   props: true,
-    // },
+    {
+      path: '/picture/:id',
+      name: '图片详情',
+      component: PictureDetailPage,
+      props: true,
+    },
     // {
     //   path: '/add_space',
     //   name: '创建空间',
@@ -81,11 +83,11 @@ const router = createRouter({
     //   name: '空间分析',
     //   component: SpaceAnalyzePage,
     // },
-    // {todo
-    //   path: '/search_picture',
-    //   name: '图片搜索',
-    //   component: SearchPicturePage,
-    // },
+    {
+      path: '/search_picture',
+      name: '图片搜索',
+      component: SearchPicturePage,
+    },
     // {
     //   path: '/user_exchange_vip',
     //   name: '用户兑换会员',

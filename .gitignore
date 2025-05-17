@@ -102,4 +102,6 @@ Desktop.ini
 # 忽略覆盖率报告
 coverage/
 
-application.yml
+*/application.yml
+yu-picture-backend/src/main/resources/application.yml
+yu-picture-ddd/src/main/resources/application.yaml
