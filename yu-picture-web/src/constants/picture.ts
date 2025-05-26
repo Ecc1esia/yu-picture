@@ -1,6 +1,5 @@
 /**
  * 图片审核状态
- * @author 程序员鱼皮 <a href="https://www.codefather.cn">编程导航原创项目</a>
  */
 export const PIC_REVIEW_STATUS_ENUM = {
   REVIEWING: 0,
@@ -20,41 +19,12 @@ export const PIC_REVIEW_STATUS_MAP = {
 /**
  * 图片审核下拉表单选项
  */
-// export const PIC_REVIEW_STATUS_OPTIONS = Object.keys(PIC_REVIEW_STATUS_MAP).map((key) => {
-//   return {
-//     label: PIC_REVIEW_STATUS_MAP[key],
-//     value: key,
-//   }
-// })
-
-
-// /**
-//  * 图片审核状态映射类型定义
-//  */
-// interface ReviewStatusMap {
-//   [key: number]: string;
-// }
-//
-// /**
-//  * 图片审核状态文案（带显式类型定义）
-//  */
-// export const PIC_REVIEW_STATUS_MAP: ReviewStatusMap = {
-//   0: '待审核',
-//   1: '通过',
-//   2: '拒绝'
-// }
-//
-// /**
-//  * 图片审核下拉表单选项
-//  */
-// export const PIC_REVIEW_STATUS_OPTIONS = Object.keys(PIC_REVIEW_STATUS_MAP).map((key) => {
-//   const numericKey = parseInt(key, 10)
-//   return {
-//     label: PIC_REVIEW_STATUS_MAP[numericKey],
-//     value: numericKey
-//   }
-// })
-
+export const PIC_REVIEW_STATUS_OPTIONS = Object.keys(PIC_REVIEW_STATUS_MAP).map((key) => {
+  return {
+    label: PIC_REVIEW_STATUS_MAP[key],
+    value: key,
+  }
+})
 
 /**
  * 图片编辑消息类型枚举

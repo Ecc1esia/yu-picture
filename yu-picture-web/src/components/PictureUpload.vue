@@ -1,5 +1,5 @@
 <template>
-  <div class="url-picture-upload">
+  <div class="picture-upload">
     <a-upload
       list-type="picture-card"
       :show-upload-list="false"
@@ -17,7 +17,6 @@
 </template>
 
 <script setup lang="ts">
-// todo
 import { ref } from 'vue'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue'
@@ -77,4 +76,26 @@ const beforeUpload = (file: UploadProps['fileList'][number]) => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.picture-upload :deep(.ant-upload) {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 152px;
+  min-height: 152px;
+}
+
+.picture-upload img {
+  max-width: 100%;
+  max-height: 480px;
+}
+
+.ant-upload-select-picture-card i {
+  font-size: 32px;
+  color: #999;
+}
+
+.ant-upload-select-picture-card .ant-upload-text {
+  margin-top: 8px;
+  color: #666;
+}
+</style>
