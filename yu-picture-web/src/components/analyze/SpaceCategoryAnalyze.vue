@@ -6,7 +6,6 @@
   </div>
 </template>
 
-<!--todo-->
 <script setup lang="ts">
 import VChart from 'vue-echarts'
 import 'echarts'

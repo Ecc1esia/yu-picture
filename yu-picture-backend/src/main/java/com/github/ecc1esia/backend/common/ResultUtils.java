@@ -1,7 +1,7 @@
 package com.github.ecc1esia.backend.common;
 
 
-import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
+import com.github.ecc1esia.backend.exception.ErrorCode;
 
 /**
  * 响应工具类

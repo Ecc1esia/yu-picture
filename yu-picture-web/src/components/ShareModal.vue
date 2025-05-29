@@ -22,7 +22,7 @@ interface Props {
 
 withDefaults(defineProps<Props>(), {
   title: "分享图片",
-  link: 'https://www.codefather.cn'
+  link: 'https://www.baidu.cn'
 })
 
 
