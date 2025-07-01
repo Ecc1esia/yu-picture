@@ -16,12 +16,21 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 用于管理腾讯云COS（Cloud Object Storage）对象的类
+ */
 @Component
 public class CosManager {
 
+    /**
+     * COS客户端配置
+     */
     @Resource
     private CosClientConfig cosClientConfig;
 
+    /**
+     * COS客户端
+     */
     @Resource
     private COSClient cosClient;
 

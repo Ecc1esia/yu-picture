@@ -20,6 +20,8 @@ import com.github.ecc1esia.backend.manager.FileManager;
 //import com.github.ecc1esia.backend.manager.upload.PictureUploadTemplate;
 //import com.github.ecc1esia.backend.manager.upload.UrlPictureUpload;
 //import com.github.ecc1esia.backend.mapper.PictureMapper;
+import com.github.ecc1esia.backend.manager.upload.FilePictureUpload;
+import com.github.ecc1esia.backend.manager.upload.UrlPictureUpload;
 import com.github.ecc1esia.backend.mapper.PictureMapper;
 import com.github.ecc1esia.backend.model.dto.file.UploadPictureResult;
 import com.github.ecc1esia.backend.model.dto.picture.*;
@@ -55,9 +57,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author 程序员鱼皮 <a href="https://www.codefather.cn">编程导航原创项目</a>
- * @description 针对表【picture(图片)】的数据库操作Service实现
- * @createDate 2024-12-11 20:45:51
+ * todo
+ *  针对表 picture 的数据库操作Service实现
  */
 @Slf4j
 @Service
@@ -73,11 +74,11 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     @Resource
     private SpaceService spaceService;
 
-//    @Resource
-//    private FilePictureUpload filePictureUpload;
-//
-//    @Resource
-//    private UrlPictureUpload urlPictureUpload;
+    @Resource
+    private FilePictureUpload filePictureUpload;
+
+    @Resource
+    private UrlPictureUpload urlPictureUpload;
 
     @Autowired
     private CosManager cosManager;

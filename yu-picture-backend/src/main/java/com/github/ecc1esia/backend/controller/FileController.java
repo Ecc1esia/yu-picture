@@ -15,11 +15,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * todo
+ * 文件控制器
+ */
 @Slf4j
 @RestController
 @RequestMapping("/file")
@@ -31,8 +34,8 @@ public class FileController {
     /**
      * 测试文件上传
      *
-     * @param multipartFile
-     * @return
+     * @param multipartFile 待上传的文件
+     * @return 文件上传后的访问路径
      */
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @PostMapping("/test/upload")
@@ -91,13 +94,5 @@ public class FileController {
                 cosObjectInput.close();
             }
         }
-
     }
 }
-
-
-
-
-
-
-
