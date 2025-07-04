@@ -107,10 +107,10 @@ public interface PictureApplicationService extends IService<Picture> {
     /**
      * 编辑图片
      *
-     * @param picture
+     * @param pictureEditRequest
      * @param loginUser
      */
-    void editPicture(Picture picture, User loginUser);
+    void editPicture(PictureEditRequest pictureEditRequest, User loginUser);
 
     /**
      * 校验空间图片的权限

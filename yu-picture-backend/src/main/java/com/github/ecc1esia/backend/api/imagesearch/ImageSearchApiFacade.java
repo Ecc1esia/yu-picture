@@ -3,6 +3,8 @@ package com.github.ecc1esia.backend.api.imagesearch;
 
 import com.github.ecc1esia.backend.api.imagesearch.model.ImageSearchResult;
 import com.github.ecc1esia.backend.api.imagesearch.sub.GetImageFirstUrlApi;
+import com.github.ecc1esia.backend.api.imagesearch.sub.GetImageListApi;
+import com.github.ecc1esia.backend.api.imagesearch.sub.GetImagePageUrlApi;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;

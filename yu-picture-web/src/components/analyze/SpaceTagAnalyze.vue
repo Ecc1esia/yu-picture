@@ -11,7 +11,7 @@ import VChart from 'vue-echarts'
 import 'echarts'
 import 'echarts-wordcloud'
 import { computed, ref, watchEffect } from 'vue'
-import { getSpaceTagAnalyzeUsingPost } from '@/api/spaceAnalyzeController.ts'
+import { getSpaceTagAnalyzeUsingPost } from '@/api/spaceAnalyzeController'
 import { message } from 'ant-design-vue'
 
 interface Props {
