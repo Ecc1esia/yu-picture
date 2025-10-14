@@ -14,9 +14,6 @@
 logs/
 *.log
 
-# 忽略 Maven 本地仓库缓存
-repository/
-
 # 忽略 Node.js 依赖
 node_modules/
 
@@ -76,28 +73,6 @@ pnpm-lock.yaml
 Thumbs.db
 ehthumbs.db
 Desktop.ini
-
-# 忽略其他临时文件
-*.tmp
-*.bak
-*.swp
-*.swo
-*.swn
-*.swm
-*.swa
-*.swx
-*.swp
-*.swo
-*.swn
-*.swm
-*.swa
-*.swx
-*.swp
-*.swo
-*.swn
-*.swm
-*.swa
-*.swx
 
 # 忽略覆盖率报告
 coverage/
