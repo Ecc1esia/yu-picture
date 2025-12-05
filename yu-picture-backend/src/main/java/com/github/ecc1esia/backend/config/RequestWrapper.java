@@ -28,7 +28,8 @@ public class RequestWrapper extends HttpServletRequestWrapper {
         super(request);
 
         StringBuilder stringBuilder = new StringBuilder();
-        try (InputStream inputStream = request.getInputStream(); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (InputStream inputStream = request.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
             char[] charBuffer = new char[128];
 
             int byteRead = -1;
@@ -68,10 +69,9 @@ public class RequestWrapper extends HttpServletRequestWrapper {
             @Override
             public void setReadListener(ReadListener readListener) {
             }
-
             @Override
             public int read() throws IOException {
-                return 0;
+                return byteArrayInputStream.read();
             }
         };
     }

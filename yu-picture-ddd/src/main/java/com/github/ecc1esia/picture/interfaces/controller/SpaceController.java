@@ -12,7 +12,6 @@ import com.github.ecc1esia.picture.infrastructure.annotation.AuthCheck;
 import com.github.ecc1esia.picture.infrastructure.common.BaseResponse;
 import com.github.ecc1esia.picture.infrastructure.common.DeleteRequest;
 import com.github.ecc1esia.picture.infrastructure.common.ResultUtils;
-import com.github.ecc1esia.picture.infrastructure.exception.BusinessException;
 import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
 import com.github.ecc1esia.picture.infrastructure.exception.ThrowUtils;
 import com.github.ecc1esia.picture.interfaces.assembler.SpaceAssembler;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
  * 空间(Space)表控制层
  * todo
  *
- * @author makejava
+ * @author ecc1esia
  * @since 2025-04-24 15:33:24
  */
 @Slf4j
@@ -85,6 +84,7 @@ public class SpaceController {
         space.validSpace(false);
         // 判断是否存在
         long id = spaceUpdateRequest.getId();
+        // todo 确认
         Space oldSpace = spaceApplicationService.getById(space);
         ThrowUtils.throwIf(oldSpace == null, ErrorCode.NOT_FOUND_ERROR);
         // 操作数据库

@@ -7,26 +7,22 @@ import com.github.ecc1esia.picture.domain.space.entity.Space;
 import com.github.ecc1esia.picture.domain.space.repository.SpaceRepository;
 import com.github.ecc1esia.picture.domain.space.service.SpaceDomainService;
 import com.github.ecc1esia.picture.domain.user.entity.User;
-import com.github.ecc1esia.picture.infrastructure.dao.SpaceDao;
 
 import com.github.ecc1esia.picture.infrastructure.exception.BusinessException;
 import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
 import com.github.ecc1esia.picture.interfaces.dto.space.SpaceQueryRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
 
 /**
  * 空间(Space)表服务实现类
- *
- * @author makejava
- * @since 2025-04-24 15:33:24
+ * 
+ * @author ecc1esia
  */
 @Service
 public class SpaceDomainServiceImpl implements SpaceDomainService {
+
     @Resource
     private SpaceRepository spaceRepository;
 

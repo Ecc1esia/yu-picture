@@ -7,7 +7,7 @@ import com.github.ecc1esia.picture.interfaces.dto.spaceuser.SpaceUserQueryReques
 /**
  * 空间用户关联(SpaceUser)表服务接口
  *
- * @author makejava
+ * @author jieyuu
  * @since 2025-04-24 15:33:24
  */
 public interface SpaceUserDomainService {

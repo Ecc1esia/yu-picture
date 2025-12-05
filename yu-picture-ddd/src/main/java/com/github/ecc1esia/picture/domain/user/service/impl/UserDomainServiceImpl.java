@@ -3,12 +3,16 @@ package com.github.ecc1esia.picture.domain.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.ecc1esia.picture.domain.user.entity.User;
-import com.github.ecc1esia.picture.infrastructure.dao.UserDao;
+import com.github.ecc1esia.picture.domain.user.repository.UserRepository;
+import com.github.ecc1esia.picture.infrastructure.exception.BusinessException;
+import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
 import com.github.ecc1esia.picture.domain.user.service.UserDomainService;
+import com.github.ecc1esia.picture.domain.user.valueobject.UserRoleEnum;
 import com.github.ecc1esia.picture.interfaces.dto.user.UserQueryRequest;
 import com.github.ecc1esia.picture.interfaces.vo.user.LoginUserVO;
 import com.github.ecc1esia.picture.interfaces.vo.user.UserVO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -17,18 +21,46 @@ import java.util.Set;
 
 /**
  * 用户(User)表服务实现类
- *
- * @author makejava
+ * todo
+ * 
+ * @author ecc1esia
  * @since 2025-04-24 15:33:24
  */
 @Service("userService")
 public class UserDomainServiceImpl implements UserDomainService {
+
     @Resource
-    private UserDao userDao;
+    private UserRepository userRepository;
+
+    UserDomainServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
-        return 0;
+        // 1. 检查用户账号是否和数据库中已有的重复
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userAccount", userAccount);
+        long count = userRepository.getBaseMapper().selectCount(queryWrapper);
+
+        if (count > 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
+        }
+
+        // 3. 密码一定要加密
+        String encryptPassword = getEncryptPassword(userPassword);
+        // 4. 插入数据到数据库中
+        User user = new User();
+        user.setUserAccount(userAccount);
+        user.setUserPassword(encryptPassword);
+        user.setUserName("无名");
+        user.setUserRole(UserRoleEnum.USER.getValue());
+        boolean saveResult = userRepository.save(user);
+        if (!saveResult) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
+        }
+        return user.getId();
     }
 
     @Override

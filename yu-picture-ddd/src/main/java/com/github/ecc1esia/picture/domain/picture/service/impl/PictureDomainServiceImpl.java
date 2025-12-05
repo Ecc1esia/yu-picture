@@ -7,13 +7,17 @@ import com.github.ecc1esia.picture.domain.user.entity.User;
 import com.github.ecc1esia.picture.infrastructure.api.aliyunai.model.CreateOutPaintingTaskResponse;
 import com.github.ecc1esia.picture.interfaces.dto.picture.*;
 import com.github.ecc1esia.picture.interfaces.vo.picture.PictureVO;
+
+import groovy.util.logging.Slf4j;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
-public class PictureDomainServiceImpl implements PictureDomainService {
-
+public class PictureDomainServiceImpl
+        implements PictureDomainService {
 
     @Override
     public PictureVO uploadPicture(Object inputSource, PictureUploadRequest pictureUploadRequest, User loginUser) {
@@ -61,7 +65,8 @@ public class PictureDomainServiceImpl implements PictureDomainService {
     }
 
     @Override
-    public CreateOutPaintingTaskResponse createPictureOutPaintingTask(CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest, User loginUser) {
+    public CreateOutPaintingTaskResponse createPictureOutPaintingTask(
+            CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest, User loginUser) {
         return null;
     }
 
