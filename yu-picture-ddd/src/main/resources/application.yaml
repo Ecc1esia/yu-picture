@@ -12,14 +12,14 @@ spring:
   # 数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yu_picture?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/yu_picture?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
-    password: 59ae8683c59fead903132a8d440bd7d9fd4936529d1d6f45f9d41111d7537bdd
+    password: 123456
   # Redis 配置
   redis:
     host: localhost
     password: 123456
-    port: 8000
+    port: 6379
     lettuce:
       pool:
         max-active: 10
