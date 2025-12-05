@@ -9,6 +9,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 
+/**
+ * @author ecc1esia
+ */
 @SpringBootApplication(exclude = {ShardingSphereAutoConfiguration.class})
 @EnableAsync
 @MapperScan("com.github.ecc1esia.picture.infrastructure.mapper")

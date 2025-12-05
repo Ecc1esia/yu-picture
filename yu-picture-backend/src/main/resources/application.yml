@@ -14,14 +14,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/yu_picture
     username: root
-    password: 59ae8683c59fead903132a8d440bd7d9fd4936529d1d6f45f9d41111d7537bdd
+    password: localhost
   # Redis 配置
   redis:
     database: 0
     host: localhost
+    password: 123456
     port: 8000
     timeout: 5000
-    password: 123456
   # Session 配置
   session:
     store-type: redis
@@ -38,9 +38,9 @@ spring:
       yu_picture:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://106.52.88.120:3306/yu_picture
+        url: jdbc:mysql://localhost:3306/yu_picture?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
         username: root
-        password: 59ae8683c59fead903132a8d440bd7d9fd4936529d1d6f45f9d41111d7537bdd
+        password: 123456
     rules:
       sharding:
         tables:
@@ -61,15 +61,15 @@ spring:
 mybatis-plus:
   configuration:
     # MyBatis 配置
-    map-underscore-to-camel-case: false
+    map-underscore-to-camel-case: true
     # 仅在开发环境打印日志
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     enable-sql-runner: true
     db-config:
       logic-delete-field: isDelete # 全局逻辑删除的实体字段名
-      logic-delete-value: 1 # 逻辑已删除值（默认为 1）
-      logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
+      logic-delete-value: true # 逻辑已删除值（默认为 1）
+      logic-not-delete-value: false # 逻辑未删除值（默认为 0）
 # 接口文档配置
 knife4j:
   enable: true
