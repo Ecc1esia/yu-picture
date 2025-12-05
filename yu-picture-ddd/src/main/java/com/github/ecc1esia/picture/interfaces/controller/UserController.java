@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * 用户(User)表控制层
  * todo
  *
- * @author makejava
+ * @author ecc1esia
  * @since 2025-04-24 15:33:24
  */
 @RestController
@@ -47,7 +47,7 @@ public class UserController {
     /**
      * 用户登录
      */
-    @PostMapping("login")
+    @PostMapping("/login")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
         LoginUserVO loginUserVO = userApplicationService.userLogin(userLoginRequest, request);

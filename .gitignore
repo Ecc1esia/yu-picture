@@ -9,6 +9,7 @@
 /target/
 /dist/
 /dist-ssr/
+*/target/
 
 # 忽略日志文件
 logs/
@@ -78,5 +79,5 @@ Desktop.ini
 coverage/
 
 */application.yml
-yu-picture-backend/src/main/resources/application.yml
-yu-picture-ddd/src/main/resources/application.yaml
+/yu-picture-backend/src/main/resources/application.yml
+/yu-picture-ddd/src/main/resources/application.yaml

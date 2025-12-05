@@ -12,9 +12,9 @@ import com.github.ecc1esia.picture.domain.space.entity.SpaceUser;
 import com.github.ecc1esia.picture.domain.space.service.SpaceUserDomainService;
 import com.github.ecc1esia.picture.domain.space.valueobject.SpaceRoleEnum;
 import com.github.ecc1esia.picture.domain.user.entity.User;
-import com.github.ecc1esia.picture.infrastructure.dao.SpaceUserDao;
 import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
 import com.github.ecc1esia.picture.infrastructure.exception.ThrowUtils;
+import com.github.ecc1esia.picture.infrastructure.mapper.SpaceUserMapper;
 import com.github.ecc1esia.picture.interfaces.assembler.SpaceUserAssembler;
 import com.github.ecc1esia.picture.interfaces.dto.spaceuser.SpaceUserAddRequest;
 import com.github.ecc1esia.picture.interfaces.dto.spaceuser.SpaceUserQueryRequest;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * 针对表【space_user(空间用户关联)】的数据库操作Service实现
  */
 @Service
-public class SpaceUserApplicationServiceImpl extends ServiceImpl<SpaceUserDao, SpaceUser>
+public class SpaceUserApplicationServiceImpl extends ServiceImpl<SpaceUserMapper, SpaceUser>
         implements SpaceUserApplicationService {
     @Resource
     private SpaceUserDomainService spaceUserDomainService;

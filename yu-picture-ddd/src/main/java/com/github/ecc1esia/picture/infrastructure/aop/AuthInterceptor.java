@@ -1,6 +1,5 @@
 package com.github.ecc1esia.picture.infrastructure.aop;
 
-
 import com.github.ecc1esia.picture.application.service.UserApplicationService;
 import com.github.ecc1esia.picture.domain.user.entity.User;
 import com.github.ecc1esia.picture.domain.user.valueobject.UserRoleEnum;
@@ -36,6 +35,10 @@ public class AuthInterceptor {
         // 判断是否需要权限
         if (mustRoleEnum == null) {
             return joinPoint.proceed();
+        }
+        
+        if (loginUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
         // 判断权限
         UserRoleEnum userRoleEnum = UserRoleEnum.getEnumByValue(loginUser.getUserRole());

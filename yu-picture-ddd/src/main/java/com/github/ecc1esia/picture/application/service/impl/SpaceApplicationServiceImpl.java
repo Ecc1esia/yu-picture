@@ -15,9 +15,9 @@ import com.github.ecc1esia.picture.domain.space.valueobject.SpaceLevelEnum;
 import com.github.ecc1esia.picture.domain.space.valueobject.SpaceRoleEnum;
 import com.github.ecc1esia.picture.domain.space.valueobject.SpaceTypeEnum;
 import com.github.ecc1esia.picture.domain.user.entity.User;
-import com.github.ecc1esia.picture.infrastructure.dao.SpaceDao;
 import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
 import com.github.ecc1esia.picture.infrastructure.exception.ThrowUtils;
+import com.github.ecc1esia.picture.infrastructure.mapper.SpaceMapper;
 import com.github.ecc1esia.picture.interfaces.assembler.SpaceAssembler;
 import com.github.ecc1esia.picture.interfaces.dto.space.SpaceAddRequest;
 import com.github.ecc1esia.picture.interfaces.dto.space.SpaceQueryRequest;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * todo
  */
 @Service
-public class SpaceApplicationServiceImpl extends ServiceImpl<SpaceDao, Space>
+public class SpaceApplicationServiceImpl extends ServiceImpl<SpaceMapper, Space>
         implements SpaceApplicationService {
     @Resource
     private SpaceDomainService spaceDomainService;

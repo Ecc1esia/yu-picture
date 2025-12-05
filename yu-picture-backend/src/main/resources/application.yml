@@ -14,13 +14,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/yu_picture
     username: root
-    password: 123456
+    password: 59ae8683c59fead903132a8d440bd7d9fd4936529d1d6f45f9d41111d7537bdd
   # Redis 配置
   redis:
     database: 0
-    host: 127.0.0.1
-    port: 6379
+    host: localhost
+    port: 8000
     timeout: 5000
+    password: 123456
   # Session 配置
   session:
     store-type: redis
@@ -37,9 +38,9 @@ spring:
       yu_picture:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/yu_picture
+        url: jdbc:mysql://106.52.88.120:3306/yu_picture
         username: root
-        password: 123456
+        password: 59ae8683c59fead903132a8d440bd7d9fd4936529d1d6f45f9d41111d7537bdd
     rules:
       sharding:
         tables:
@@ -48,7 +49,7 @@ spring:
             table-strategy:
               standard:
                 sharding-column: spaceId
-                sharding-algorithm-name: picture_sharding_algorithm  # 使用自定义分片算法
+                sharding-algorithm-name: picture_sharding_algorithm # 使用自定义分片算法
         sharding-algorithms:
           picture_sharding_algorithm:
             type: CLASS_BASED
@@ -80,15 +81,15 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.github.ecc1esia.backend.controller
-## 对象存储配置（需要从腾讯云获取）
-#cos:
-#  client:
-#    host: xxx
-#    secretId: xxx
-#    secretKey: xxx
-#    region: xxx
-#    bucket: xxx
+# 对象存储配置（需要从腾讯云获取）
+cos:
+  client:
+    host: xxx
+    secretId: xxx
+    secretKey: xxx
+    region: xxx
+    bucket: xxx
 
-## 阿里云 AI 配置
-#aliYunAi:
-#  apiKey: xxx
+# 阿里云 AI 配置
+aliYunAi:
+  apiKey: xxx

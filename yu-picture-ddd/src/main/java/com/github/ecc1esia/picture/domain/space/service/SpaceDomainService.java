@@ -4,13 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.ecc1esia.picture.domain.space.entity.Space;
 import com.github.ecc1esia.picture.domain.user.entity.User;
 import com.github.ecc1esia.picture.interfaces.dto.space.SpaceQueryRequest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 /**
  * 空间(Space)表服务接口
  *
- * @author makejava
+ * @author ecc1esia
  * @since 2025-04-24 15:33:24
  */
 public interface SpaceDomainService {

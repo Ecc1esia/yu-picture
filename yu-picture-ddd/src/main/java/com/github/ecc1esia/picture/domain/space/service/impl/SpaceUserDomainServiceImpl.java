@@ -1,13 +1,15 @@
 package com.github.ecc1esia.picture.domain.space.service.impl;
 
-
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.ecc1esia.picture.domain.space.entity.SpaceUser;
+import com.github.ecc1esia.picture.domain.space.repository.SpaceUserRepository;
 import com.github.ecc1esia.picture.domain.space.service.SpaceUserDomainService;
 import com.github.ecc1esia.picture.interfaces.dto.spaceuser.SpaceUserQueryRequest;
-import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
 
 /**
  * 实现SpaceUserDomainService接口的服务类
@@ -15,6 +17,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SpaceUserDomainServiceImpl implements SpaceUserDomainService {
+
+    @Resource
+    private SpaceUserRepository spaceUserRepository;
 
     /**
      * 根据查询请求生成SpaceUser的查询包装器
@@ -46,6 +51,3 @@ public class SpaceUserDomainServiceImpl implements SpaceUserDomainService {
         return queryWrapper;
     }
 }
-
-
-

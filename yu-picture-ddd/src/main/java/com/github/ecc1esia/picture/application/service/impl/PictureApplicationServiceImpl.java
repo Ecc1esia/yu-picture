@@ -11,10 +11,10 @@ import com.github.ecc1esia.picture.domain.picture.entity.Picture;
 import com.github.ecc1esia.picture.domain.picture.service.PictureDomainService;
 import com.github.ecc1esia.picture.domain.user.entity.User;
 import com.github.ecc1esia.picture.infrastructure.api.aliyunai.model.CreateOutPaintingTaskResponse;
-import com.github.ecc1esia.picture.infrastructure.dao.PictureDao;
 import com.github.ecc1esia.picture.infrastructure.exception.BusinessException;
 import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
 import com.github.ecc1esia.picture.infrastructure.exception.ThrowUtils;
+import com.github.ecc1esia.picture.infrastructure.mapper.PictureMapper;
 import com.github.ecc1esia.picture.interfaces.dto.picture.*;
 import com.github.ecc1esia.picture.interfaces.vo.picture.PictureVO;
 import com.github.ecc1esia.picture.interfaces.vo.user.UserVO;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  *
  */
 @Service
-public class PictureApplicationServiceImpl extends ServiceImpl<PictureDao, Picture>
+public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Picture>
         implements PictureApplicationService {
 
     @Resource
