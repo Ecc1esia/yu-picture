@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- *
+ * @author ecc1esia
  */
 @Service
 public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Picture>

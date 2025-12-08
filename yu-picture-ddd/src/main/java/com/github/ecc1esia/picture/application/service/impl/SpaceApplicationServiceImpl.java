@@ -23,7 +23,6 @@ import com.github.ecc1esia.picture.interfaces.dto.space.SpaceAddRequest;
 import com.github.ecc1esia.picture.interfaces.dto.space.SpaceQueryRequest;
 import com.github.ecc1esia.picture.interfaces.vo.space.SpaceVO;
 import com.github.ecc1esia.picture.interfaces.vo.user.UserVO;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -50,7 +49,7 @@ public class SpaceApplicationServiceImpl extends ServiceImpl<SpaceMapper, Space>
     @Resource
     private TransactionTemplate transactionTemplate;
 
-    @Qualifier("spaceDomainService")
+    // @Qualifier("spaceDomainService")
 
     // 为了方便部署，注释掉分表
 //    @Resource

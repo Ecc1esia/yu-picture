@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * 用于配置 MyBatis-Plus 相关的拦截器和其他扩展功能
  */
 @Configuration
-@MapperScan("com.github.ecc1esia.picture.infrastructure.dao")
+@MapperScan("com.github.ecc1esia.picture.infrastructure.mapper")
 public class MybatisPlusConfig {
 
     /**

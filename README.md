@@ -84,3 +84,13 @@ yu-picture-repro/
 ## 贡献指南
 
 欢迎提交 Pull Request 或 Issue，共同完善项目！
+
+
+## TODOList
+- 实现基础代码功能
+- JDK21升级
+- RBAC权限控制
+- Session升级至token
+- 多租户改造
+- 前端UI组件库升级
+- 用户密码加盐升级

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * todo
+ * @author ecc1esia
  */
 @Service
 public class UserApplicationServiceImpl implements UserApplicationService {
