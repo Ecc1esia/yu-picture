@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-except-error
 /* eslint-disable */
 import request from '@/request'
 
@@ -37,7 +37,7 @@ export async function testUploadFileUsingPost(
         if (item instanceof Array) {
           item.forEach((f) => formData.append(ele, f || ''))
         } else {
-          formData.append(ele, JSON.stringify(item))
+          formData.append(ele, new Blob([JSON.stringify(item)], { type: 'application/json' }))
         }
       } else {
         formData.append(ele, item)
@@ -50,5 +50,6 @@ export async function testUploadFileUsingPost(
     data: formData,
     requestType: 'form',
     ...(options || {}),
-  })
+    // todo 测试此处是否有bug
+  } as any)
 }

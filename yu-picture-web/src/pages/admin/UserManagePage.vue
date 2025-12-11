@@ -34,13 +34,12 @@
           </div>
         </template>
         <template v-if="column.dataIndex === 'createTime'">
-          {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+          {{ formatTime(record.createTime) }}
         </template>
         <template v-else-if="column.key === 'action'">
           <a-button type="primary" @click="doDelete(record.id)">删除</a-button>
         </template>
       </template>
-
     </a-table>
   </div>
 </template>
@@ -48,7 +47,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import { deleteUserUsingPost, listUserVoByPageUsingPost } from '@/api/userController.ts'
-import { message } from 'ant-design-vue'
+import { message, type PaginationProps } from 'ant-design-vue'
 import dayjs from 'dayjs'
 
 const columns = [
@@ -92,7 +91,7 @@ const total = ref(0)
 const searchParams = reactive<API.UserQueryRequest>({
   current: 1,
   pageSize: 10,
-  sortField: 'createTime',
+  sortField: 'create_time',
   sortOrder: 'ascend',
 })
 
@@ -120,12 +119,16 @@ const pagination = computed(() => {
     total: total.value,
     showSizeChanger: true,
     showQuickJumper: true,
-    showTotal: (total) => `共 ${total} 条`,
+    showTotal: (total: number) => `共 ${total} 条`,
   }
 })
 
-// 表格变化之后，重新获取数据
-const doTableChange = (page: any) => {
+// 格式化时间函数
+const formatTime = (time: string | Date | undefined): string => {
+  return time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : ''
+}
+
+const doTableChange = (page: PaginationProps) => {
   searchParams.current = page.current
   searchParams.pageSize = page.pageSize
   fetchData()
@@ -138,7 +141,7 @@ const doSearch = () => {
   fetchData()
 }
 // 删除数据
-const doDelete = async (id: string) => {
+const doDelete = async (id: number) => {
   if (!id) {
     return
   }

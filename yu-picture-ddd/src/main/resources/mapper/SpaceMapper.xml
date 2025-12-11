@@ -4,12 +4,12 @@
 
     <resultMap type="com.github.ecc1esia.picture.domain.space.entity.Space" id="SpaceMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
-        <result property="spaceName" column="space_Name" jdbcType="VARCHAR"/>
-        <result property="spaceLevel" column="space_Level" jdbcType="INTEGER"/>
-        <result property="maxSize" column="max_Size" jdbcType="INTEGER"/>
-        <result property="maxCount" column="max_Count" jdbcType="INTEGER"/>
-        <result property="totalSize" column="total_Size" jdbcType="INTEGER"/>
-        <result property="totalCount" column="total_Count" jdbcType="INTEGER"/>
+        <result property="spaceName" column="space_name" jdbcType="VARCHAR"/>
+        <result property="spaceLevel" column="space_level" jdbcType="INTEGER"/>
+        <result property="maxSize" column="max_size" jdbcType="INTEGER"/>
+        <result property="maxCount" column="max_count" jdbcType="INTEGER"/>
+        <result property="totalSize" column="total_size" jdbcType="INTEGER"/>
+        <result property="totalCount" column="total_count" jdbcType="INTEGER"/>
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="editTime" column="edit_time" jdbcType="TIMESTAMP"/>

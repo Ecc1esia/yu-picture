@@ -320,7 +320,9 @@ declare namespace API {
     rightOffset?: number
     topOffset?: number
     xScale?: number
+    xscale?: number
     yScale?: number
+    yscale?: number
   }
 
   type Picture = {
@@ -566,6 +568,7 @@ declare namespace API {
   type SpaceUser = {
     createTime?: string
     id?: number
+    isDelete?: number
     spaceId?: number
     spaceRole?: string
     updateTime?: string
@@ -662,6 +665,9 @@ declare namespace API {
     userPassword?: string
     userProfile?: string
     userRole?: string
+    vipCode?: string
+    vipExpireTime?: string
+    vipNumber?: number
   }
 
   type UserAddRequest = {

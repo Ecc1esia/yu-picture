@@ -51,6 +51,7 @@ public class SpaceUser implements Serializable {
     private Date updateTime;
 
     @TableLogic
+    @TableField(value = "is_delete")
     private Integer isDelete;
 
     @TableField(exist = false)

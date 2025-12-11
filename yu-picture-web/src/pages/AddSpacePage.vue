@@ -1,5 +1,5 @@
 <template>
-  <!--todo-->
+  <!--TODO-->
 
   <div id="addSpacePage">
     <h2 style="margin-bottom: 16px">

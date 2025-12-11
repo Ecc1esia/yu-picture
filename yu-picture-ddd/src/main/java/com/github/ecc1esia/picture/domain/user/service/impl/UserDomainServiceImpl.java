@@ -119,14 +119,13 @@ public class UserDomainServiceImpl implements UserDomainService {
         Object userObject = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
         User currentUser = (User) userObject;
 
-        ThrowUtils.throwIf(currentUser == null || currentUser.getId() == null,
-                new BusinessException(ErrorCode.NOT_LOGIN_ERROR));
+        ThrowUtils.throwIf(currentUser == null || currentUser.getId() == null, ErrorCode.NOT_LOGIN_ERROR);
 
         // 数据库查询数据
         // 可以跳过
         Long userId = currentUser.getId();
         currentUser = userRepository.getById(userId);
-        ThrowUtils.throwIf(currentUser == null, new BusinessException(ErrorCode.NOT_FOUND_ERROR));
+        ThrowUtils.throwIf(currentUser == null, ErrorCode.NOT_FOUND_ERROR);
 
         return (User) userObject;
     }
@@ -186,7 +185,7 @@ public class UserDomainServiceImpl implements UserDomainService {
         String sortOrder = userQueryRequest.getSortOrder();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(ObjUtil.isNotNull(id), "id", id);
-        queryWrapper.eq(StrUtil.isNotBlank(userRole), "user_ole", userRole);
+        queryWrapper.eq(StrUtil.isNotBlank(userRole), "user_role", userRole);
         queryWrapper.like(StrUtil.isNotBlank(userAccount), "user_account", userAccount);
         queryWrapper.like(StrUtil.isNotBlank(userName), "user_name", userName);
         queryWrapper.like(StrUtil.isNotBlank(userProfile), "user_profile", userProfile);
@@ -215,7 +214,7 @@ public class UserDomainServiceImpl implements UserDomainService {
 
     @Override
     public Page<User> page(Page<User> userPage, QueryWrapper<User> queryWrapper) {
-        return userRepository.page(userPage , queryWrapper);
+        return userRepository.page(userPage, queryWrapper);
     }
 
     @Override

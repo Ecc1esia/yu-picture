@@ -1,5 +1,5 @@
 <template>
-  <!--todo-->
+  <!-- TODO -->
   <div id="addPictureBatchPage">
     <h2 style="margin-bottom: 16px">批量创建</h2>
     <!-- 图片信息表单 -->
@@ -14,7 +14,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const formData = reactive<API.PictureUploadByBatchRequest>({

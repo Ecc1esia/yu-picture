@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-except-error
 /* eslint-disable */
 import request from '@/request'
 

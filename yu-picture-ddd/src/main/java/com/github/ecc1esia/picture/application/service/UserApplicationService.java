@@ -108,4 +108,5 @@ public interface UserApplicationService {
 
     long saveUser(User userEntity);
 
+    boolean exchangeVip(User loginUser, String vipCode);
 }

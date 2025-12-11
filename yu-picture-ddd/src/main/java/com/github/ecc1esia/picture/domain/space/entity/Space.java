@@ -14,9 +14,10 @@ import java.io.Serializable;
 
 /**
  * 空间
+ * 
  * @TableName space
  */
-@TableName(value ="space")
+@TableName(value = "space")
 @Data
 public class Space implements Serializable {
     /**
@@ -84,6 +85,7 @@ public class Space implements Serializable {
      * 是否删除
      */
     @TableLogic
+    @TableField(value = "is_delete")
     private Integer isDelete;
 
     @TableField(exist = false)

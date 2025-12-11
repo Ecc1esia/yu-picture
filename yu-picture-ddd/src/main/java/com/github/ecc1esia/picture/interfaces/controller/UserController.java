@@ -23,8 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 用户(User)表控制层
- * todo
- *
+ * 
  * @author ecc1esia
  * @since 2025-04-24 15:33:24
  */
@@ -48,7 +47,8 @@ public class UserController {
      * 用户登录
      */
     @PostMapping("/login")
-    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest,
+            HttpServletRequest request) {
         ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
         LoginUserVO loginUserVO = userApplicationService.userLogin(userLoginRequest, request);
         return ResultUtils.success(loginUserVO);
@@ -146,5 +146,17 @@ public class UserController {
         return ResultUtils.success(userApplicationService.listUserVOByPage(userQueryRequest));
     }
 
+    /**
+     * 兑换会员
+     */
+    @PostMapping("/exchange/vip")
+    public BaseResponse<Boolean> exchangeVip(@RequestBody VipExchangeRequest vipExchangeRequest,
+            HttpServletRequest httpServletRequest) {
+        ThrowUtils.throwIf(vipExchangeRequest == null, ErrorCode.PARAMS_ERROR);
+        String vipCode = vipExchangeRequest.getVipCode();
+        User loginUser = userApplicationService.getLoginUser(httpServletRequest);
+        // 调用 service 层的方法进行会员兑换
+        boolean result = userApplicationService.exchangeVip(loginUser, vipCode);
+        return ResultUtils.success(result);
+    }
 }
-

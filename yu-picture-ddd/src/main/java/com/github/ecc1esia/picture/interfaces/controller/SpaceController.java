@@ -12,6 +12,7 @@ import com.github.ecc1esia.picture.infrastructure.annotation.AuthCheck;
 import com.github.ecc1esia.picture.infrastructure.common.BaseResponse;
 import com.github.ecc1esia.picture.infrastructure.common.DeleteRequest;
 import com.github.ecc1esia.picture.infrastructure.common.ResultUtils;
+import com.github.ecc1esia.picture.infrastructure.exception.BusinessException;
 import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
 import com.github.ecc1esia.picture.infrastructure.exception.ThrowUtils;
 import com.github.ecc1esia.picture.interfaces.assembler.SpaceAssembler;
@@ -30,8 +31,7 @@ import java.util.stream.Collectors;
 
 /**
  * 空间(Space)表控制层
- * todo
- *
+ * 
  * @author ecc1esia
  * @since 2025-04-24 15:33:24
  */
@@ -57,7 +57,7 @@ public class SpaceController {
 
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteSpace(@RequestBody DeleteRequest deleteRequest,
-                                             HttpServletRequest request) {
+            HttpServletRequest request) {
         ThrowUtils.throwIf(deleteRequest == null || deleteRequest.getId() <= 0, ErrorCode.PARAMS_ERROR);
         User loginUser = userApplicationService.getLoginUser(request);
         Long id = deleteRequest.getId();
@@ -78,14 +78,17 @@ public class SpaceController {
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateSpace(@RequestBody SpaceUpdateRequest spaceUpdateRequest,
-                                             HttpServletRequest request) {
+            HttpServletRequest request) {
+        if (spaceUpdateRequest == null || spaceUpdateRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // 将实体类和 DTO 进行转换
         Space space = SpaceAssembler.toSpaceEntity(spaceUpdateRequest);
         spaceApplicationService.fillSpaceBySpaceLevel(space);
         space.validSpace(false);
         // 判断是否存在
         long id = spaceUpdateRequest.getId();
-        // todo 确认
-        Space oldSpace = spaceApplicationService.getById(space);
+        Space oldSpace = spaceApplicationService.getById(id);
         ThrowUtils.throwIf(oldSpace == null, ErrorCode.NOT_FOUND_ERROR);
         // 操作数据库
         boolean result = spaceApplicationService.updateById(space);
@@ -139,7 +142,8 @@ public class SpaceController {
      * 分页获取空间列表（封装类）
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<SpaceVO>> listSpaceVOByPage(@RequestBody SpaceQueryRequest spaceQueryRequest, HttpServletRequest request) {
+    public BaseResponse<Page<SpaceVO>> listSpaceVOByPage(@RequestBody SpaceQueryRequest spaceQueryRequest,
+            HttpServletRequest request) {
         long current = spaceQueryRequest.getCurrent();
         long size = spaceQueryRequest.getPageSize();
 
@@ -190,10 +194,9 @@ public class SpaceController {
                         spaceLevelEnum.getValue(),
                         spaceLevelEnum.getText(),
                         spaceLevelEnum.getMaxCount(),
-                        spaceLevelEnum.getMaxSize()
-                )).collect(Collectors.toList());
+                        spaceLevelEnum.getMaxSize()))
+                .collect(Collectors.toList());
 
         return ResultUtils.success(spaceLevelList);
     }
 }
-

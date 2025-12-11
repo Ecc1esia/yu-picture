@@ -1,5 +1,5 @@
 <template>
-  <!--todo-->
+  <!-- TODO -->
   <div id="vipExchangePage">
     <h2 style="margin-bottom: 16px">会员码兑换</h2>
 
@@ -18,45 +18,46 @@
 </template>
 
 <script setup lang="ts">
-// import { message } from 'ant-design-vue'
-// import { reactive, ref } from 'vue'
-// import { exchangeVipUsingPost } from '@/api/userController.ts'
-// import { useRouter } from 'vue-router'
+import { message } from 'ant-design-vue'
+import { reactive, ref } from 'vue'
+import { exchangeVipUsingPost } from '@/api/userController.ts'
+import { useRouter } from 'vue-router'
 
-// const formData = reactive<API.VipExchangeRequest>({
-//   vipCode: '',
-// })
+const formData = reactive<API.VipExchangeRequest>({
+  vipCode: '',
+})
 
-// const loading = ref(false)
-// const router = useRouter()
+const loading = ref(false)
+const router = useRouter()
 
-// const handleSubmit = async () => {
-//   // 校验兑换码是否为空
-//   if (!formData.vipCode) {
-//     message.error('请输入会员码')
-//     return
-//   }
+const handleSubmit = async () => {
+  // 校验兑换码是否为空
+  if (!formData.vipCode) {
+    message.error('请输入会员码')
+    return
+  }
 
-//   loading.value = true
+  loading.value = true
 
-//   try {
-//     const res = await exchangeVipUsingPost({ vipCode: formData.vipCode })
+  try {
+    const res = await exchangeVipUsingPost({ vipCode: formData.vipCode })
 
-//     // 成功
-//     if (res.downTask.code === 0 && res.data.data) {
-//       message.success('兑换成功')
-//       router.push({
-//         path: '/',
-//       })
-//     } else {
-//       message.error('兑换失败, ' + res.data.message)
-//     }
-//   } catch (error) {
-//     message.error('兑换失败,请稍后重试')
-//   } finally {
-//     loading.value = false
-//   }
-// }
+    // 成功
+    if (res.data.code === 0 && res.data.data) {
+      message.success('兑换成功')
+      router.push({
+        path: '/',
+      })
+    } else {
+      message.error('兑换失败, ' + res.data.message)
+    }
+  } catch (error) {
+    console.error(error)
+    message.error('兑换失败,请稍后重试')
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <style scoped>

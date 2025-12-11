@@ -1,7 +1,6 @@
 package com.github.ecc1esia.picture.application.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,18 +12,15 @@ import com.github.ecc1esia.picture.domain.user.entity.User;
 import com.github.ecc1esia.picture.infrastructure.api.aliyunai.model.CreateOutPaintingTaskResponse;
 import com.github.ecc1esia.picture.infrastructure.exception.BusinessException;
 import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
-import com.github.ecc1esia.picture.infrastructure.exception.ThrowUtils;
 import com.github.ecc1esia.picture.infrastructure.mapper.PictureMapper;
 import com.github.ecc1esia.picture.interfaces.dto.picture.*;
 import com.github.ecc1esia.picture.interfaces.vo.picture.PictureVO;
 import com.github.ecc1esia.picture.interfaces.vo.user.UserVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +28,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author ecc1esia
+ *  TODO
  */
 @Service
 public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Picture>
@@ -93,7 +90,8 @@ public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Pi
     @Override
     public Page<PictureVO> getPictureVOPage(Page<Picture> picturePage, HttpServletRequest request) {
         List<Picture> pictureList = picturePage.getRecords();
-        Page<PictureVO> pictureVOPage = new Page<>(picturePage.getCurrent(), picturePage.getSize(), picturePage.getTotal());
+        Page<PictureVO> pictureVOPage = new Page<>(picturePage.getCurrent(), picturePage.getSize(),
+                picturePage.getTotal());
         if (CollUtil.isEmpty(pictureList)) {
             return pictureVOPage;
         }
@@ -176,32 +174,9 @@ public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Pi
         pictureDomainService.deletePicture(pictureId, loginUser);
     }
 
-    /**
-     * @param picture
-     * @param loginUser
-     */
     @Override
-    public void editPicture(PictureEditRequest pictureEditRequest, User loginUser) {
-        // 在此处将实体类和 DTO 进行转换
-        Picture picture = new Picture();
-        BeanUtils.copyProperties(pictureEditRequest, picture);
-        // 注意将 list 转为 string
-        picture.setTags(JSONUtil.toJsonStr(pictureEditRequest.getTags()));
-        // 设置编辑时间
-        picture.setEditTime(new Date());
-        // 数据校验
-        this.validPicture(picture);
-        // 判断是否存在
-        long id = pictureEditRequest.getId();
-        Picture oldPicture = this.getById(id);
-        ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR);
-        // 校验权限，已经改为使用注解鉴权
-//        checkPictureAuth(loginUser, oldPicture);
-        // 补充审核参数
-        this.fillReviewParams(picture, loginUser);
-        // 操作数据库
-        boolean result = this.updateById(picture);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+    public void editPicture(Picture picture, User loginUser) {
+        pictureDomainService.editPicture(picture, loginUser);
     }
 
     /**
@@ -239,7 +214,8 @@ public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Pi
      * @return
      */
     @Override
-    public CreateOutPaintingTaskResponse createPictureOutPaintingTask(CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest, User loginUser) {
+    public CreateOutPaintingTaskResponse createPictureOutPaintingTask(
+            CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest, User loginUser) {
         return pictureDomainService.createPictureOutPaintingTask(createPictureOutPaintingTaskRequest, loginUser);
     }
 }

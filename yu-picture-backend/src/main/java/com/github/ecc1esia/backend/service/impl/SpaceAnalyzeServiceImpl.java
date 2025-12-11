@@ -56,7 +56,7 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
             checkSpaceAnalyzeAuth(spaceUsageAnalyzeRequest, loginUser);
             // 统计图库的使用空间
             QueryWrapper<Picture> queryWrapper = new QueryWrapper<>();
-            queryWrapper.select("picSize");
+            queryWrapper.select("pic_size");
             // 补充查询范围
             fillAnalyzeQueryWrapper(spaceUsageAnalyzeRequest, queryWrapper);
             List<Object> pictureObjList = pictureService.getBaseMapper().selectObjs(queryWrapper);
@@ -113,7 +113,7 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
         fillAnalyzeQueryWrapper(spaceCategoryAnalyzeRequest, queryWrapper);
 
         // 使用mybais plus分组查询
-        queryWrapper.select("category", "count(id) as count, sum(picSize) as totalSize")
+        queryWrapper.select("category", "count(id) as count, sum(pic_size) as totalSize")
                 .groupBy("category");
 
         return pictureService.getBaseMapper().selectMaps(queryWrapper)
@@ -121,7 +121,7 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
                 .map(result -> {
                     String category = (String) result.get("category");
                     Long count = ((Number) result.get("count")).longValue();
-                    Long totalSize = ((Number) result.get("totalSize")).longValue();
+                    Long totalSize = ((Number) result.get("total_size")).longValue();
                     return new SpaceCategoryAnalyzeResponse(category, count, totalSize);
                 }).collect(Collectors.toList());
     }
@@ -182,7 +182,7 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
         QueryWrapper<Picture> queryWrapper = new QueryWrapper<>();
         fillAnalyzeQueryWrapper(spaceSizeAnalyzeRequest, queryWrapper);
 
-        queryWrapper.select("picSize");
+        queryWrapper.select("pic_size");
         List<Long> picSizeList = pictureService.getBaseMapper().selectObjs(queryWrapper)
                 .stream()
                 .filter(ObjUtil::isNotNull)
@@ -219,18 +219,18 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
 
         // 补充用户 id 查询
         Long userId = spaceUserAnalyzeRequest.getUserId();
-        queryWrapper.eq(ObjUtil.isNotNull(userId), "userId", userId);
+        queryWrapper.eq(ObjUtil.isNotNull(userId), "user_id", userId);
         // 补充分析维度
         String timeDimension = spaceUserAnalyzeRequest.getTimeDimension();
         switch (timeDimension) {
             case "day":
-                queryWrapper.select("DATE_FORMAT(createTime, '%Y-%m-%d') as period", "count(*) as count");
+                queryWrapper.select("DATE_FORMAT(creat_time, '%Y-%m-%d') as period", "count(*) as count");
                 break;
             case "week":
-                queryWrapper.select("YEARWEEK(createTime)  as period", "count(*) as count");
+                queryWrapper.select("YEARWEEK(create_time)  as period", "count(*) as count");
                 break;
             case "month":
-                queryWrapper.select("DATE_FORMAT(createTime, '%Y-%m') as period", "count(*) as count");
+                queryWrapper.select("DATE_FORMAT(create_time, '%Y-%m') as period", "count(*) as count");
                 break;
             default:
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "不支持的时间维度");
@@ -265,8 +265,8 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
 
         // 构造查询条件
         QueryWrapper<Space> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "userId", "spaceName", "totalSize")
-                .orderByDesc("totalSize")
+        queryWrapper.select("id", "user_id", "space_name", "total_size")
+                .orderByDesc("total_size")
                 .last("limit " + spaceRankAnalyzeRequest.getTopN());
 
         // 执行查询并返回结果
@@ -314,14 +314,14 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space> imp
         // 公共图库
         boolean queryPublic = spaceAnalyzeRequest.isQueryPublic();
         if (queryPublic) {
-            queryWrapper.isNull("spaceId");
+            queryWrapper.isNull("space_id");
             return;
         }
 
         // 分析特定空间
         Long spaceId = spaceAnalyzeRequest.getSpaceId();
         if (spaceId != null) {
-            queryWrapper.eq("spaceId", spaceId);
+            queryWrapper.eq("space_id", spaceId);
             return;
         }
         // 如果没有指定查询范围，抛出参数错误异常

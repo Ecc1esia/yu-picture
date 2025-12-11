@@ -90,12 +90,12 @@ watchEffect(() => {
 const router = useRouter()
 // 监听路由变化，更新高亮菜单项
 const current = ref<string[]>([])
-router.afterEach((to, from, next) => {
+router.afterEach((to) => {
   current.value = [to.path]
 })
 
 // 路由跳转事件
-const doMenuClick = ({ key }) => {
+const doMenuClick = ({ key }: { key: string }) => {
   router.push(key)
 }
 </script>

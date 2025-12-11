@@ -44,9 +44,9 @@ public class SpaceUserDomainServiceImpl implements SpaceUserDomainService {
         String spaceRole = spaceUserQueryRequest.getSpaceRole();
         // 根据查询条件构建查询包装器
         queryWrapper.eq(ObjUtil.isNotEmpty(id), "id", id);
-        queryWrapper.eq(ObjUtil.isNotEmpty(spaceId), "spaceId", spaceId);
-        queryWrapper.eq(ObjUtil.isNotEmpty(userId), "userId", userId);
-        queryWrapper.eq(ObjUtil.isNotEmpty(spaceRole), "spaceRole", spaceRole);
+        queryWrapper.eq(ObjUtil.isNotEmpty(spaceId), "space_id", spaceId);
+        queryWrapper.eq(ObjUtil.isNotEmpty(userId), "user_id", userId);
+        queryWrapper.eq(ObjUtil.isNotEmpty(spaceRole), "spaceR_role", spaceRole);
         // 返回构建好的查询包装器
         return queryWrapper;
     }

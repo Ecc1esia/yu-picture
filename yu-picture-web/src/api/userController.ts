@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-except-error
 /* eslint-disable */
 import request from '@/request'
 
@@ -20,6 +20,21 @@ export async function deleteUserUsingPost(
   options?: { [key: string]: any }
 ) {
   return request<API.BaseResponseBoolean_>('/api/user/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** exchangeVip POST /api/user/exchange/vip */
+export async function exchangeVipUsingPost(
+  body: API.VipExchangeRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseBoolean_>('/api/user/exchange/vip', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

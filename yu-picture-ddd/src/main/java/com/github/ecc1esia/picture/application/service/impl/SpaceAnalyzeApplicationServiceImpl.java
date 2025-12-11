@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 /**
  * 空间分析服务实现
+ * TODO
  */
 @Service
 public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicationService {
@@ -34,9 +35,9 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
     @Resource
     private PictureApplicationService pictureApplicationService;
 
-
     @Override
-    public SpaceUsageAnalyzeResponse getSpaceUsageAnalyze(SpaceUsageAnalyzeRequest spaceUsageAnalyzeRequest, User loginUser) {
+    public SpaceUsageAnalyzeResponse getSpaceUsageAnalyze(SpaceUsageAnalyzeRequest spaceUsageAnalyzeRequest,
+            User loginUser) {
         // 校验参数
         // 全空间或公共图库，需要从 Picture 表查询
         if (spaceUsageAnalyzeRequest.isQueryAll() || spaceUsageAnalyzeRequest.isQueryPublic()) {
@@ -84,7 +85,8 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
     }
 
     @Override
-    public List<SpaceCategoryAnalyzeResponse> getSpaceCategoryAnalyze(SpaceCategoryAnalyzeRequest spaceCategoryAnalyzeRequest, User loginUser) {
+    public List<SpaceCategoryAnalyzeResponse> getSpaceCategoryAnalyze(
+            SpaceCategoryAnalyzeRequest spaceCategoryAnalyzeRequest, User loginUser) {
         ThrowUtils.throwIf(spaceCategoryAnalyzeRequest == null, ErrorCode.PARAMS_ERROR);
         // 检查权限
         checkSpaceAnalyzeAuth(spaceCategoryAnalyzeRequest, loginUser);
@@ -93,7 +95,7 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
         fillAnalyzeQueryWrapper(spaceCategoryAnalyzeRequest, queryWrapper);
 
         // 使用mybatis 分组查询
-        queryWrapper.select("category, count(id) as count, sum(picSize) as totalSize")
+        queryWrapper.select("category, count(id) as count, sum(pic_size) as total_size")
                 .groupBy("category");
         // 查询并且转换结果
         return pictureApplicationService.getBaseMapper().selectMaps(queryWrapper)
@@ -101,13 +103,14 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
                 .map(result -> {
                     String category = (String) result.get("category");
                     Long count = ((Number) result.get("count")).longValue();
-                    Long totalSize = ((Number) result.get("totalSize")).longValue();
+                    Long totalSize = ((Number) result.get("total_size")).longValue();
                     return new SpaceCategoryAnalyzeResponse(category, count, totalSize);
                 }).collect(Collectors.toList());
     }
 
     @Override
-    public List<SpaceTagAnalyzeResponse> getSpaceTagAnalyze(SpaceTagAnalyzeRequest spaceTagAnalyzeRequest, User loginUser) {
+    public List<SpaceTagAnalyzeResponse> getSpaceTagAnalyze(SpaceTagAnalyzeRequest spaceTagAnalyzeRequest,
+            User loginUser) {
         ThrowUtils.throwIf(spaceTagAnalyzeRequest == null, ErrorCode.PARAMS_ERROR);
         // 检查权限
         checkSpaceAnalyzeAuth(spaceTagAnalyzeRequest, loginUser);
@@ -136,7 +139,8 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
     }
 
     @Override
-    public List<SpaceSizeAnalyzeResponse> getSpaceSizeAnalyze(SpaceSizeAnalyzeRequest spaceSizeAnalyzeRequest, User loginUser) {
+    public List<SpaceSizeAnalyzeResponse> getSpaceSizeAnalyze(SpaceSizeAnalyzeRequest spaceSizeAnalyzeRequest,
+            User loginUser) {
         ThrowUtils.throwIf(spaceSizeAnalyzeRequest == null, ErrorCode.PARAMS_ERROR);
         // 检查权限
         checkSpaceAnalyzeAuth(spaceSizeAnalyzeRequest, loginUser);
@@ -146,7 +150,7 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
         fillAnalyzeQueryWrapper(spaceSizeAnalyzeRequest, queryWrapper);
 
         // 查询所有符合条件的图片大小
-        queryWrapper.select("picSize");
+        queryWrapper.select("pic_size");
         // 100、120、1000
         List<Long> picSizeList = pictureApplicationService.getBaseMapper().selectObjs(queryWrapper)
                 .stream()
@@ -157,8 +161,10 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
         // 定义分段范围，注意使用有序的 Map
         Map<String, Long> sizeRanges = new LinkedHashMap<>();
         sizeRanges.put("<100KB", picSizeList.stream().filter(size -> size < 100 * 1024).count());
-        sizeRanges.put("100KB-500KB", picSizeList.stream().filter(size -> size >= 100 * 1024 && size < 500 * 1024).count());
-        sizeRanges.put("500KB-1MB", picSizeList.stream().filter(size -> size >= 500 * 1024 && size < 1 * 1024 * 1024).count());
+        sizeRanges.put("100KB-500KB",
+                picSizeList.stream().filter(size -> size >= 100 * 1024 && size < 500 * 1024).count());
+        sizeRanges.put("500KB-1MB",
+                picSizeList.stream().filter(size -> size >= 500 * 1024 && size < 1 * 1024 * 1024).count());
         sizeRanges.put(">1MB", picSizeList.stream().filter(size -> size >= 1 * 1024 * 1024).count());
 
         // 转换为响应对象
@@ -168,7 +174,8 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
     }
 
     @Override
-    public List<SpaceUserAnalyzeResponse> getSpaceUserAnalyze(SpaceUserAnalyzeRequest spaceUserAnalyzeRequest, User loginUser) {
+    public List<SpaceUserAnalyzeResponse> getSpaceUserAnalyze(SpaceUserAnalyzeRequest spaceUserAnalyzeRequest,
+            User loginUser) {
         ThrowUtils.throwIf(spaceUserAnalyzeRequest == null, ErrorCode.PARAMS_ERROR);
         checkSpaceAnalyzeAuth(spaceUserAnalyzeRequest, loginUser);
 
@@ -176,17 +183,17 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
         fillAnalyzeQueryWrapper(spaceUserAnalyzeRequest, queryWrapper);
         // 补充 用户id 查询
         Long userId = spaceUserAnalyzeRequest.getUserId();
-        queryWrapper.eq(ObjUtil.isNotNull(userId), "userId", userId);
+        queryWrapper.eq(ObjUtil.isNotNull(userId), "user_id", userId);
         String timeDimension = spaceUserAnalyzeRequest.getTimeDimension();
         switch (timeDimension) {
             case "day":
-                queryWrapper.apply("DATE_FORMAT(createTime, '%Y-%m-%d') as period", "count(*) as count");
+                queryWrapper.apply("DATE_FORMAT(create_time, '%Y-%m-%d') as period", "count(*) as count");
                 break;
             case "week":
-                queryWrapper.apply("YEARWEEK(createTime) as period", "count(*) as count");
+                queryWrapper.apply("YEARWEEK(create_time) as period", "count(*) as count");
                 break;
             case "month":
-                queryWrapper.apply("DATE_FORMAT(createTime, '%Y-%m') as period", "count(*) as count");
+                queryWrapper.apply("DATE_FORMAT(create_time, '%Y-%m') as period", "count(*) as count");
                 break;
             default:
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "不支持的时间维度");
@@ -214,8 +221,8 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
         // 检查权限, 仅管理员可以查看
         ThrowUtils.throwIf(!loginUser.isAdmin(), ErrorCode.NO_AUTH_ERROR);
         QueryWrapper<Space> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "spaceName", "totalSize", "userId")
-                .orderByDesc("totalSize")
+        queryWrapper.select("id", "space_name", "total_size", "user_id")
+                .orderByDesc("total_size")
                 .last("limit " + spaceRankAnalyzeRequest.getTopN());
 
         return spaceApplicationService.list(queryWrapper);
@@ -258,13 +265,13 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
         // 公共服务
         boolean queryPublic = spaceAnalyzeRequest.isQueryPublic();
         if (queryPublic) {
-            queryWrapper.isNull("spaceId");
+            queryWrapper.isNull("space_id");
             return;
         }
         // 分析特定空间
         Long spaceId = spaceAnalyzeRequest.getSpaceId();
         if (spaceId != null) {
-            queryWrapper.eq("spaceId", spaceId);
+            queryWrapper.eq("space_id", spaceId);
             return;
         }
         throw new BusinessException(ErrorCode.PARAMS_ERROR, "未指定查询范围");
