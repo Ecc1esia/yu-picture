@@ -47,9 +47,9 @@ const timeDimensionOptions = [
   },
 ]
 // 用户选项
-const userId = ref<string>()
+const userId = ref<number>()
 
-const doSearch = (value: string) => {
+const doSearch = (value: number) => {
   userId.value = value
 }
 

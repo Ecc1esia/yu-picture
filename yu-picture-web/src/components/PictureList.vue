@@ -37,7 +37,7 @@
         </a-list-item>
       </template>
     </a-list>
-    <ShareModal ref="shareModalRef" :link="shareLink" />
+    <ShareModal title="shareModalRef" :link="shareLink" />
   </div>
 </template>
 
@@ -121,7 +121,7 @@ const doDelete = async (picture: API.PictureVO, e: Event) => {
 // ----- 分享操作 ----
 const shareModalRef = ref()
 // 分享链接
-const shareLink = ref<string>()
+const shareLink = ref<string>('')
 // 分享
 const doShare = (picture: API.PictureVO, e: Event) => {
   // 阻止冒泡

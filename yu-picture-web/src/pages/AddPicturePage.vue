@@ -113,8 +113,9 @@ const pictureForm = reactive<API.PictureEditRequest>({})
 const uploadType = ref<'file' | 'url'>('file')
 
 // 空间id
-const spaceId = computed(() => {
-  return route.query?.spaceId
+const spaceId = computed<number | undefined>(() => {
+  const id = Number(route.query?.spaceId)
+  return isNaN(id) ? undefined : id
 })
 
 /**
@@ -130,15 +131,15 @@ const onSuccess = (newPicture: API.PictureVO) => {
  * 提交表单
  * @param values
  */
-const handleSubmit = async (values: any) => {
+const handleSubmit = async (values: API.PictureEditRequest) => {
   console.log(values)
-  const pictureId = picture.value.id
+  const pictureId = picture.value?.id
   if (!pictureId) {
     return
   }
   const res = await editPictureUsingPost({
     id: pictureId,
-    spaceId: spaceId.value,
+    // spaceId: spaceId.value,
     ...values,
   })
   // 操作成功
@@ -152,8 +153,8 @@ const handleSubmit = async (values: any) => {
   }
 }
 
-const categoryOptions = ref<string[]>([])
-const tagOptions = ref<string[]>([])
+const categoryOptions = ref<Array<{ value: string; label: string }>>([])
+const tagOptions = ref<Array<{ value: string; label: string }>>([])
 
 /**
  * 获取标签和分类选项
@@ -183,23 +184,26 @@ onMounted(() => {
   getTagCategoryOptions()
 })
 
-// 获取老数据
+// 获取老的图片
 const getOldPicture = async () => {
   // 获取到id
-  const id = route.query?.id
-  if (id) {
-    const res = await getPictureVoByIdUsingGet({
-      id,
-    })
+  const id = Number(route.query?.id)
+  // 表示不存在老图片
+  if (!id || isNaN(id)) {
+    return
+  }
 
-    if (res.data.code === 0 && res.data.data) {
-      const data = res.data.data
-      picture.value = data
-      pictureForm.name = data.name
-      pictureForm.introduction = data.introduction
-      pictureForm.category = data.category
-      pictureForm.tags = data.tags
-    }
+  const res = await getPictureVoByIdUsingGet({
+    id,
+  })
+
+  if (res.data.code === 0 && res.data.data) {
+    const data = res.data.data
+    picture.value = data
+    pictureForm.name = data.name
+    pictureForm.introduction = data.introduction
+    pictureForm.category = data.category
+    pictureForm.tags = data.tags
   }
 }
 
@@ -240,8 +244,13 @@ const space = ref<API.SpaceVO>()
 const fetchSpace = async () => {
   // 获取数据
   if (spaceId.value) {
+    const id = Number(spaceId.value)
+    if (isNaN(id)) {
+      message.error('空间id错误')
+      return
+    }
     const res = await getSpaceVoByIdUsingGet({
-      id: spaceId.value,
+      id,
     })
     if (res.data.code === 0 && res.data.data) {
       space.value = res.data.data

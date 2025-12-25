@@ -58,7 +58,7 @@ import { HomeOutlined } from '@ant-design/icons-vue'
 import { type MenuProps, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
-import { userLoginUsingPost, userLogoutUsingPost } from '@/api/userController.ts'
+import { userLogoutUsingPost } from '@/api/userController.ts'
 
 const loginUserStore = useLoginUserStore()
 const originItems = [
@@ -97,9 +97,9 @@ const originItems = [
 
 const filterMenus = (menus = [] as MenuProps['items']) => {
   return menus?.filter((menu) => {
-    if (menu?.key?.startsWith('/admin')) {
+    if (typeof menu?.key === 'string' && menu.key.startsWith('/admin')) {
       const loginUser = loginUserStore.loginUser
-      if (!loginUser || loginUser.userRole === 'ADMIN') {
+      if (!loginUser || loginUser.userRole !== 'ADMIN') {
         return false
       }
     }
@@ -112,11 +112,11 @@ const items = computed(() => filterMenus(originItems))
 const router = useRouter()
 // 当前要高亮的菜单项
 const current = ref<string[]>(['mail'])
-router.afterEach((to, from, next) => {
+router.afterEach((to) => {
   current.value = [to.path]
 })
 
-const doMenuClick = ({ key }) => {
+const doMenuClick = ({ key }: { key: string }) => {
   router.push({
     path: key,
   })

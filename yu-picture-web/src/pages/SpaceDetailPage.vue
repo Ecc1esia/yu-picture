@@ -2,13 +2,22 @@
   <div id="spaceDetailPage">
     <!-- 空间信息 -->
     <a-flex justify="space-between">
-      <h2>{{ space.spaceName }} ({{ SPACE_TYPE_MAP[space.spaceType] }})</h2>
+      <h2>
+        {{ space.spaceName }} ({{
+          space.spaceType !== undefined ? SPACE_TYPE_MAP[space.spaceType] : ''
+        }})
+      </h2>
       <a-space size="middle">
-        <a-button
+        <!-- <a-button
           v-if="canUploadPicture"
           type="primary"
           :href="`/add_picture?spaceId=${id}`"
           target="_blank"
+        > -->
+        <a-button
+          v-if="canUploadPicture"
+          type="primary"
+          @click="$router.push({ path: `/add_picture`, query: { spaceId: id } })"
         >
           + 创建图片
         </a-button>
@@ -42,7 +51,11 @@
           <a-progress
             type="circle"
             :size="42"
-            :percent="((space.totalSize * 100) / space.maxSize).toFixed(1)"
+            :percent="
+              space.totalSize != null && space.maxSize != null && space.maxSize > 0
+                ? ((space.totalSize * 100) / space.maxSize).toFixed(1)
+                : 0
+            "
           />
         </a-tooltip>
       </a-space>
@@ -131,8 +144,8 @@ const fetchSpaceDetail = async () => {
     } else {
       message.error('获取空间详情失败，' + res.data.message)
     }
-  } catch (e: Error) {
-    message.error('获取空间详情失败，' + e.message)
+  } catch (e) {
+    message.error('获取空间详情失败，' + e)
   }
 }
 
@@ -234,7 +247,7 @@ const doBatchEdit = () => {
 // 空间 id 改变时，必须重新获取数据
 watch(
   () => props.id,
-  (newSpaceId) => {
+  () => {
     fetchSpaceDetail()
     fetchData()
   },

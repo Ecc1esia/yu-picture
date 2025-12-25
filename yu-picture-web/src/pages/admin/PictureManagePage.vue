@@ -75,7 +75,11 @@
         </template>
 
         <template v-if="column.dataIndex === 'reviewMessage'">
-          <div>审核状态：{{ PIC_REVIEW_STATUS_MAP[record.reviewStatus] }}</div>
+          <div>
+            审核状态：{{
+              PIC_REVIEW_STATUS_MAP[record.reviewStatus as keyof typeof PIC_REVIEW_STATUS_MAP]
+            }}
+          </div>
           <div>审核信息：{{ record.reviewMessage }}</div>
           <div>审核人：{{ record.reviewerId }}</div>
           <div v-if="record.reviewTime">
@@ -124,6 +128,7 @@ import {
   doPictureReviewUsingPost,
   listPictureByPageUsingPost,
 } from '@/api/pictureController.ts'
+import type { PaginationProps } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
 import {
   PIC_REVIEW_STATUS_ENUM,
@@ -234,7 +239,7 @@ const pagination = computed(() => {
 })
 
 // 表格变化之后，重新获取数据
-const doTableChange = (page: any) => {
+const doTableChange = (page: PaginationProps) => {
   searchParams.current = page.current
   searchParams.pageSize = page.pageSize
   fetchData()
@@ -248,7 +253,7 @@ const doSearch = () => {
 }
 
 // 删除数据
-const doDelete = async (id: string) => {
+const doDelete = async (id: number) => {
   if (!id) {
     return
   }

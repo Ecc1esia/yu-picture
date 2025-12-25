@@ -69,6 +69,7 @@ import { onMounted, reactive, ref } from 'vue'
 
 import { listPictureTagCategoryUsingGet } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
+import dayjs from 'dayjs'
 
 interface Props {
   onSearch?: (searchParams: API.PictureQueryRequest) => void
@@ -84,8 +85,8 @@ const doSearch = () => {
 }
 
 // 标签和分类选项
-const categoryOptions = ref<string[]>([])
-const tagOptions = ref<string[]>([])
+const categoryOptions = ref<Array<{ value: string; label: string }>>([])
+const tagOptions = ref<Array<{ value: string; label: string }>>([])
 
 /**
  * 获取标签和分类选项
@@ -145,7 +146,8 @@ const rangePresets = ref([
 const doClear = () => {
   // 取消所有对象的值
   Object.keys(searchParams).forEach((key) => {
-    searchParams[key] = undefined
+    const k = key as keyof API.PictureQueryRequest
+    searchParams[k] = undefined
   })
   // 日期筛选项单独清空，必须定义为空数组
   dateRange.value = []

@@ -77,8 +77,12 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
         spaceUsageAnalyzeResponse.setMaxSize(space.getMaxSize());
         spaceUsageAnalyzeResponse.setMaxCount(space.getMaxCount());
         // 计算比例
-        double sizeUsageRatio = NumberUtil.round(space.getTotalSize() * 100.0 / space.getMaxSize(), 2).doubleValue();
-        double countUsageRatio = NumberUtil.round(space.getTotalCount() * 100.0 / space.getMaxCount(), 2).doubleValue();
+        double sizeUsageRatio = space.getMaxSize() > 0
+                ? NumberUtil.round(space.getTotalSize() * 100.0 / space.getMaxSize(), 2).doubleValue()
+                : 0;
+        double countUsageRatio = space.getMaxCount() > 0
+                ? NumberUtil.round(space.getTotalCount() * 100.0 / space.getMaxCount(), 2).doubleValue()
+                : 0;
         spaceUsageAnalyzeResponse.setSizeUsageRatio(sizeUsageRatio);
         spaceUsageAnalyzeResponse.setCountUsageRatio(countUsageRatio);
         return spaceUsageAnalyzeResponse;
@@ -187,13 +191,13 @@ public class SpaceAnalyzeApplicationServiceImpl implements SpaceAnalyzeApplicati
         String timeDimension = spaceUserAnalyzeRequest.getTimeDimension();
         switch (timeDimension) {
             case "day":
-                queryWrapper.apply("DATE_FORMAT(create_time, '%Y-%m-%d') as period", "count(*) as count");
+                queryWrapper.select("DATE_FORMAT(create_time, '%Y-%m-%d') as period, count(*) as count");
                 break;
             case "week":
-                queryWrapper.apply("YEARWEEK(create_time) as period", "count(*) as count");
+                queryWrapper.select("YEARWEEK(create_time) as period, count(*) as count");
                 break;
             case "month":
-                queryWrapper.apply("DATE_FORMAT(create_time, '%Y-%m') as period", "count(*) as count");
+                queryWrapper.select("DATE_FORMAT(create_time, '%Y-%m') as period, count(*) as count");
                 break;
             default:
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "不支持的时间维度");

@@ -52,7 +52,7 @@ const resultImageUrl = ref<string>('')
 const taskId = ref<string>()
 
 // 轮询定时器
-let pollingTimer: NodeJS.Timeout = null
+let pollingTimer: number | null = null
 
 // 是否正在上传
 const uploadLoading = ref(false)
@@ -102,18 +102,20 @@ const startPolling = () => {
         const taskResult = res.data.data.output
         if (taskResult?.taskStatus === 'SUCCEEDED') {
           message.success('扩图任务执行成功')
-          resultImageUrl.value = taskResult.outputImageUrl
+          if (taskResult?.outputImageUrl) {
+            resultImageUrl.value = taskResult.outputImageUrl
+          }
           // 清理轮询
           clearPolling()
-        } else if (taskResult.taskStatus === 'FAILED') {
+        } else if (taskResult?.taskStatus === 'FAILED') {
           message.error('扩图任务执行失败')
           // 清理轮询
           clearPolling()
         }
       }
-    } catch (error: Error) {
+    } catch (e) {
       console.error('扩图任务轮询失败', e)
-      message.error('扩图任务轮询失败，' + e.message)
+      message.error('扩图任务轮询失败，' + e)
       // 清理轮询
       clearPolling()
     }
@@ -124,7 +126,7 @@ const clearPolling = () => {
   if (pollingTimer) {
     clearInterval(pollingTimer)
     pollingTimer = null
-    taskId.value = null
+    taskId.value = undefined
   }
 }
 
@@ -152,9 +154,9 @@ const handleUpload = async () => {
     } else {
       message.error('图片上传失败，' + res.data.message)
     }
-  } catch (error: Error) {
+  } catch (error) {
     console.error('图片上传失败', error)
-    message.error('图片上传失败，' + error.message)
+    message.error('图片上传失败，' + error)
   }
   uploadLoading.value = false
 }

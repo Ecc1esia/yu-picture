@@ -1,13 +1,10 @@
 <template>
-  <!-- TODO -->
   <div id="vipExchangePage">
     <h2 style="margin-bottom: 16px">会员码兑换</h2>
-
     <a-form name="formData" layout="vertical" :model="formData" @finish="handleSubmit">
       <a-form-item name="vipCode" label="兑换码">
         <a-input v-model:value="formData.vipCode" placeholder="请输入会员码" allow-clear />
       </a-form-item>
-
       <a-form-item>
         <a-button type="primary" html-type="submit" style="width: 100%" :loading="loading">
           兑换

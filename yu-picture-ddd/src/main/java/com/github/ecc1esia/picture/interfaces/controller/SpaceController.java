@@ -188,7 +188,7 @@ public class SpaceController {
      * @return
      */
     @GetMapping("/list/level")
-    public BaseResponse<List<SpaceLevel>> getSpaceLevelList() {
+    public BaseResponse<List<SpaceLevel>> listSpaceLevel() {
         List<SpaceLevel> spaceLevelList = Arrays.stream(SpaceLevelEnum.values())
                 .map(spaceLevelEnum -> new SpaceLevel(
                         spaceLevelEnum.getValue(),

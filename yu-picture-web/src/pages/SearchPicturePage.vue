@@ -62,15 +62,15 @@ const loading = ref<boolean>(true)
 const fetchPictureDetail = async () => {
   try {
     const res = await getPictureVoByIdUsingGet({
-      id: pictureId.value,
+      id: pictureId.value ? Number(pictureId.value) : undefined,
     })
     if (res.data.code === 0 && res.data.data) {
       picture.value = res.data.data
     } else {
       message.error('获取图片详情失败，' + res.data.message)
     }
-  } catch (error: Error) {
-    message.error('获取图片详情失败，' + error.message)
+  } catch (error) {
+    message.error('获取图片详情失败，' + error)
   }
 }
 
@@ -83,7 +83,7 @@ const fetchResultData = async () => {
   loading.value = true
   try {
     const res = await searchPictureByPictureUsingPost({
-      pictureId: pictureId.value,
+      pictureId: pictureId.value ? Number(pictureId.value) : 0,
     })
     if (res.data.code === 0 && res.data.data) {
       dataList.value = res.data.data ?? []
@@ -91,7 +91,7 @@ const fetchResultData = async () => {
       message.error('获取数据失败，' + res.data.message)
     }
   } catch (error) {
-    message.error('获取数据失败，' + error.message)
+    message.error('获取数据失败，' + error)
   }
   loading.value = false
 }

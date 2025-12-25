@@ -81,13 +81,17 @@ const formData = reactive<API.PictureEditByBatchRequest>({
  * 提交表单
  * @param values
  */
-const handleSubmit = async (values: any) => {
+const handleSubmit = async (values: API.PictureEditByBatchRequest) => {
   if (!props.pictureList) {
     return
   }
 
+  const pictureIdList = props.pictureList
+    .map((item) => item.id)
+    .filter((id): id is number => id !== undefined)
+
   const res = await editPictureByBatchUsingPost({
-    pictureIdList: props.pictureList.map((item) => item.id),
+    pictureIdList,
     spaceId: props.spaceId,
     ...values,
   })
@@ -101,8 +105,8 @@ const handleSubmit = async (values: any) => {
   }
 }
 
-const categoryOptions = ref<string[]>([])
-const tagOptions = ref<string[]>([])
+const categoryOptions = ref<Array<{ value: string; label: string }>>([])
+const tagOptions = ref<Array<{ value: string; label: string }>>([])
 
 /**
  * 获取标签和分类选项

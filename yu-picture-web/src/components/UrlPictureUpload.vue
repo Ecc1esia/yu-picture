@@ -51,9 +51,9 @@ const handleUpload = async () => {
     } else {
       message.error('图片上传失败，' + res.data.message)
     }
-  } catch (error: Error) {
+  } catch (error) {
     console.error('图片上传失败', error)
-    message.error('图片上传失败，' + error.message)
+    message.error('图片上传失败，' + error)
   }
   loading.value = false
 }

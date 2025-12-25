@@ -93,7 +93,6 @@ public class PictureController {
      */
     @PostMapping("/upload")
     @SaSpaceCheckPermission(value = SpaceUserPermissionConstant.PICTURE_UPLOAD)
-    // @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<PictureVO> uploadPicture(
             @RequestPart("file") MultipartFile multipartFile,
             PictureUploadRequest pictureUploadRequest,
