@@ -11,11 +11,13 @@ import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
 import com.github.ecc1esia.picture.infrastructure.exception.ThrowUtils;
 import com.github.ecc1esia.picture.domain.user.service.UserDomainService;
 import com.github.ecc1esia.picture.domain.user.valueobject.UserRoleEnum;
+import com.github.ecc1esia.picture.interfaces.dto.user.UserLoginRequest;
 import com.github.ecc1esia.picture.interfaces.dto.user.UserQueryRequest;
 import com.github.ecc1esia.picture.interfaces.vo.user.LoginUserVO;
 import com.github.ecc1esia.picture.interfaces.vo.user.UserVO;
 import com.github.ecc1esia.picture.shared.auth.StpKit;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -29,6 +31,7 @@ import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -48,7 +51,7 @@ import java.util.stream.Collectors;
 public class UserDomainServiceImpl implements UserDomainService {
 
     final String SALT = "yupi";
-    final String DEFAULT_USER_NAME = "yuu";
+    final String DEFAULT_USER_NAME = "无名";
 
     // 允许排序的字段白名单
     private static final Set<String> SORT_FIELD_WHITELIST = Collections
@@ -71,34 +74,67 @@ public class UserDomainServiceImpl implements UserDomainService {
 
         ThrowUtils.throwIf(count > 0, new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复"));
 
+        // 随机生成六位的盐
+        String salt = generateSalt();
         // 密码加密
-        String encryptPassword = getEncryptPassword(userPassword);
+        String encryptPassword = getEncryptPassword(userPassword, salt);
         // 插入数据到数据库中
         User user = new User();
         user.setUserAccount(userAccount);
         user.setUserPassword(encryptPassword);
+        user.setSalt(salt);
         user.setUserName(DEFAULT_USER_NAME);
         user.setUserRole(UserRoleEnum.USER.getValue());
         boolean saveResult = userRepository.save(user);
         ThrowUtils.throwIf(!saveResult, new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误"));
         return user.getId();
     }
+    // @Override
+    // public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
+    //     String encryptPassword = getEncryptPassword(userPassword);
+    //     LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+
+    //     // 查询用户是否存在
+    //     queryWrapper.eq(User::getUserAccount, userAccount);
+    //     queryWrapper.eq(User::getUserPassword, encryptPassword);
+
+    //     User user = userRepository.getOne(queryWrapper);
+
+    //     if (user == null) {
+    //         log.info("user login failed, userAccount cannot match userPassword");
+    //         throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
+    //     }
+    //     // 保存用户的登录态
+    //     request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, user);
+    //     // 记录用户登录态到 Sa-token
+    //     // 注意保证该用户信息与 SpringSession 中的信息过期时间一致
+    //     StpKit.SPACE.login(user.getId());
+    //     StpKit.SPACE.getSession().set(UserConstant.USER_LOGIN_STATE, user);
+    //     return this.getLoginUserVO(user);
+    // }
 
     @Override
-    public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
-        String encryptPassword = getEncryptPassword(userPassword);
+    public LoginUserVO userLogin(UserLoginRequest userLoginRequest, HttpServletRequest request) {
+        String userAccount = userLoginRequest.getUserAccount();
+        String inputPassword = userLoginRequest.getUserPassword();
+
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
 
         // 查询用户是否存在
         queryWrapper.eq(User::getUserAccount, userAccount);
-        queryWrapper.eq(User::getUserPassword, encryptPassword);
 
         User user = userRepository.getOne(queryWrapper);
-
         if (user == null) {
             log.info("user login failed, userAccount cannot match userPassword");
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
+
+        String encryptPassword = getEncryptPassword(inputPassword, user.getSalt());
+        if (!encryptPassword.equals(user.getUserPassword())) {
+            log.info("user login failed, userAccount cannot match userPassword");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
+        }
+
         // 保存用户的登录态
         request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, user);
         // 记录用户登录态到 Sa-token
@@ -112,6 +148,22 @@ public class UserDomainServiceImpl implements UserDomainService {
     public String getEncryptPassword(String userPassword) {
         // 加盐，混淆密码
         return DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+    }
+
+    @Override
+    public String getEncryptPassword(String inputPassword, String salt) {
+        // 加盐，混淆密码
+        return DigestUtils.md5DigestAsHex((salt + inputPassword).getBytes());
+    }
+
+    /**
+     * 生成盐
+     */
+    private String generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        return Base64.encode(salt);
     }
 
     @Override

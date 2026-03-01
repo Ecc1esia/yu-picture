@@ -62,7 +62,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         // 校验
         User.validUserLogin(userAccount, userPassword);
         // 执行
-        return userDomainService.userLogin(userAccount, userPassword, request);
+        return userDomainService.userLogin(userLoginRequest, request);
     }
 
     /**

@@ -89,17 +89,20 @@ yu-picture-repro/
 
 欢迎提交 Pull Request 或 Issue，共同完善项目！
 
-## TODOList
+## todoList
 
-- 实现基础代码功能
+- 实现基础代码功能 ✅
 - JDK21 升级
 - SpringBoot3 升级
+- 多租户改造
 - RBAC 权限控制
 - Session 升级至 token
-- 多租户改造
 - 前端 UI 组件库升级
 - 用户密码加盐升级
 - WebSocket 升级
 - WebSocket 多实例适配
 - 性能测试
-- docker 容器部署
+- docker容器部署
+- 图片向量检索
+- 以图搜图api优化
+- 隐形水印功能实现

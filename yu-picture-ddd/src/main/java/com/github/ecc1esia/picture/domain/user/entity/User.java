@@ -38,6 +38,11 @@ public class User implements Serializable {
     private String userPassword;
 
     /**
+     * 盐
+     */
+    @TableField(value = "salt")
+    private String salt;
+    /**
      * 用户昵称
      */
     @TableField(value = "user_name")

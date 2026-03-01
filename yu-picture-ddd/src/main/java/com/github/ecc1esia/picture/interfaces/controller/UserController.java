@@ -76,13 +76,13 @@ public class UserController {
     /**
      * 创建用户
      */
-    @PostMapping("/add")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
-        ThrowUtils.throwIf(userAddRequest == null, ErrorCode.PARAMS_ERROR);
-        User userEntity = UserAssembler.toUserEntity(userAddRequest);
-        return ResultUtils.success(userApplicationService.saveUser(userEntity));
-    }
+    // @PostMapping("/add")
+    // @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    // public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
+    //     ThrowUtils.throwIf(userAddRequest == null, ErrorCode.PARAMS_ERROR);
+    //     User userEntity = UserAssembler.toUserEntity(userAddRequest);
+    //     return ResultUtils.success(userApplicationService.saveUser(userEntity));
+    // }
 
     /**
      * 根据 id 获取用户（仅管理员）

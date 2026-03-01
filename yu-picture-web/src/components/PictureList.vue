@@ -1,37 +1,71 @@
 <template>
   <div class="picture-list">
+    <!-- 空状态 -->
+    <a-empty v-if="!loading && dataList.length === 0" description="暂无图片" />
+
+    <!-- 骨架屏加载状态 -->
+    <a-skeleton v-else-if="loading" active :rows="{ count: 4 }" :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }">
+      <template #default>
+        <a-skeleton-image />
+      </template>
+    </a-skeleton>
+
     <!-- 图片列表 -->
     <a-list
+      v-else
       :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }"
       :data-source="dataList"
-      :loading="loading"
+      class="picture-grid"
     >
       <template #renderItem="{ item: picture }">
-        <a-list-item style="padding: 0">
-          <a-card hoverable @click="doClickPicture(picture)">
+        <a-list-item class="picture-item">
+          <a-card
+            hoverable
+            class="picture-card"
+            @click="doClickPicture(picture)"
+          >
             <template #cover>
-              <img
-                :alt="picture.name"
-                :src="picture.thumbnailUrl ?? picture.url"
-                style="height: 180px; object-fit: cover"
-              />
+              <div class="image-wrapper">
+                <img
+                  :alt="picture.name"
+                  :src="picture.thumbnailUrl ?? picture.url"
+                  loading="lazy"
+                  class="picture-image"
+                />
+                <div class="image-overlay">
+                  <EyeOutlined class="preview-icon" />
+                </div>
+              </div>
             </template>
-            <a-card-meta :title="picture.name">
+            <a-card-meta :title="picture.name" class="card-meta">
               <template #description>
-                <a-flex>
-                  <a-tag color="green">
+                <a-flex wrap="wrap" :gap="4">
+                  <a-tag color="blue" class="category-tag">
                     {{ picture.category ?? '默认' }}
                   </a-tag>
-                  <a-tag v-for="tag in picture.tags" :key="tag">{{ tag }}</a-tag>
+                  <a-tag v-for="tag in picture.tags?.slice(0, 3)" :key="tag" class="tag-item">
+                    {{ tag }}
+                  </a-tag>
+                  <a-tag v-if="picture.tags?.length > 3" class="tag-item">
+                    +{{ picture.tags.length - 3 }}
+                  </a-tag>
                 </a-flex>
               </template>
             </a-card-meta>
 
             <template v-if="showOp" #actions>
-              <ShareAltOutlined @click="(e) => doShare(picture, e)" />
-              <SearchOutlined @click="(e) => doSearch(picture, e)" />
-              <EditOutlined v-if="canEdit" @click="(e) => doEdit(picture, e)" />
-              <DeleteOutlined v-if="canDelete" @click="(e) => doDelete(picture, e)" />
+              <a-tooltip title="分享">
+                <ShareAltOutlined class="action-icon" @click="(e) => doShare(picture, e)" />
+              </a-tooltip>
+              <a-tooltip title="以图搜图">
+                <SearchOutlined class="action-icon" @click="(e) => doSearch(picture, e)" />
+              </a-tooltip>
+              <a-tooltip v-if="canEdit" title="编辑">
+                <EditOutlined class="action-icon" @click="(e) => doEdit(picture, e)" />
+              </a-tooltip>
+              <a-tooltip v-if="canDelete" title="删除">
+                <DeleteOutlined class="action-icon delete-icon" @click="(e) => doDelete(picture, e)" />
+              </a-tooltip>
             </template>
           </a-card>
         </a-list-item>
@@ -48,6 +82,7 @@ import {
   EditOutlined,
   SearchOutlined,
   ShareAltOutlined,
+  EyeOutlined,
 } from '@ant-design/icons-vue'
 import { deletePictureUsingPost } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'

@@ -16,6 +16,8 @@ import com.github.ecc1esia.picture.interfaces.dto.spaceuser.SpaceUserQueryReques
 import com.github.ecc1esia.picture.interfaces.vo.space.SpaceUserVO;
 import com.github.ecc1esia.picture.shared.auth.annotation.SaSpaceCheckPermission;
 import com.github.ecc1esia.picture.shared.auth.model.SpaceUserPermissionConstant;
+
+import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,7 +77,7 @@ public class SpaceUserController {
         ThrowUtils.throwIf(spaceUserQueryRequest == null, ErrorCode.PARAMS_ERROR);
         Long spaceId = spaceUserQueryRequest.getSpaceId();
         Long userId = spaceUserQueryRequest.getUserId();
-        ThrowUtils.throwIf(spaceId == null || userId == null, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(ObjectUtil.hasEmpty(spaceId, userId), ErrorCode.PARAMS_ERROR);
         // 查询数据库
         SpaceUser spaceUser = spaceUserApplicationService
                 .getOne(spaceUserApplicationService.getQueryWrapper(spaceUserQueryRequest));

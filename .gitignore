@@ -81,3 +81,11 @@ coverage/
 */application.yml
 /yu-picture-backend/src/main/resources/application.yml
 /yu-picture-ddd/src/main/resources/application.yaml
+
+CLAUDE.md
+.claude
+
+# 环境变量
+.env
+
+doc/
