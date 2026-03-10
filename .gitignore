@@ -88,4 +88,5 @@ CLAUDE.md
 # 环境变量
 .env
 
+# 本地文档
 doc/

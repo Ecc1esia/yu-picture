@@ -91,18 +91,19 @@ yu-picture-repro/
 
 ## todoList
 
-- 实现基础代码功能 ✅
-- JDK21 升级
-- SpringBoot3 升级
+- ~~原项目基础功能实现~~
+- ~~用户密码加盐升级~~
+- JDK21 升级 测试中
+- SpringBoot3 升级 测试中
 - 多租户改造
 - RBAC 权限控制
-- Session 升级至 token
-- 前端 UI 组件库升级
-- 用户密码加盐升级
-- WebSocket 升级
-- WebSocket 多实例适配
+- Session 升级 token(暂缓)
+- 前端 UI/UX 升级
+- WebSocket架构升级
+- docker容器化部署
+- 同一空间内 图片向量检索
+- 图片向量存储中间件引入
+- 以图搜图api寻找替代品
+- 前端隐形水印功能实现
+- AI扩图
 - 性能测试
-- docker容器部署
-- 图片向量检索
-- 以图搜图api优化
-- 隐形水印功能实现

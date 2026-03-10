@@ -9,7 +9,7 @@ import com.github.ecc1esia.picture.interfaces.dto.space.SpaceAddRequest;
 import com.github.ecc1esia.picture.interfaces.dto.space.SpaceQueryRequest;
 import com.github.ecc1esia.picture.interfaces.vo.space.SpaceVO;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 针对表【space(空间)】的数据库操作Service

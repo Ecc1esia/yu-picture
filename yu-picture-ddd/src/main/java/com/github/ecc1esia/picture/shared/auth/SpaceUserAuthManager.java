@@ -15,7 +15,7 @@ import com.github.ecc1esia.picture.shared.auth.model.SpaceUserPermissionConstant
 import com.github.ecc1esia.picture.shared.auth.model.SpaceUserRole;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

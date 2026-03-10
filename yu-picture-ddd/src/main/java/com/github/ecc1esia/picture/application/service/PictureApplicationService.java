@@ -9,7 +9,7 @@ import com.github.ecc1esia.picture.infrastructure.api.aliyunai.model.CreateOutPa
 import com.github.ecc1esia.picture.interfaces.dto.picture.*;
 import com.github.ecc1esia.picture.interfaces.vo.picture.PictureVO;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

@@ -5,8 +5,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.servlet.ServletUtil;
-import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
 import cn.hutool.json.JSONUtil;
 import com.github.ecc1esia.picture.application.service.PictureApplicationService;
@@ -26,8 +24,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.util.StreamUtils;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static com.github.ecc1esia.picture.domain.user.constant.UserConstant.USER_LOGIN_STATE;
@@ -178,11 +180,21 @@ public class StpInterfaceImpl implements StpInterface {
         SpaceUserAuthContext authRequest;
 
         // 获取请求参数
-        if (ContentType.JSON.getValue().equals(contentType)) {
-            String body = ServletUtil.getBody(request);
+        if (contentType != null && contentType.contains("application/json")) {
+            String body;
+            try {
+                body = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "读取请求体失败");
+            }
             authRequest = JSONUtil.toBean(body, SpaceUserAuthContext.class);
         } else {
-            Map<String, String> paramMap = ServletUtil.getParamMap(request);
+            Map<String, String> paramMap = new HashMap<>();
+            request.getParameterMap().forEach((key, values) -> {
+                if (values != null && values.length > 0) {
+                    paramMap.put(key, values[0]);
+                }
+            });
             authRequest = BeanUtil.toBean(paramMap, SpaceUserAuthContext.class);
         }
         // 根据请求路径区分 id 字段的含义

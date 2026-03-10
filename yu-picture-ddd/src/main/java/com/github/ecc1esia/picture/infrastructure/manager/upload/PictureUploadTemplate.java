@@ -16,7 +16,7 @@ import com.qcloud.cos.model.ciModel.persistence.ProcessResults;
 import lombok.extern.slf4j.Slf4j;
 import cn.hutool.core.util.NumberUtil;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.File;
 import java.util.Date;
 import java.util.List;

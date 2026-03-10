@@ -11,7 +11,7 @@ import com.github.ecc1esia.picture.interfaces.dto.user.UserRegisterRequest;
 import com.github.ecc1esia.picture.interfaces.vo.user.LoginUserVO;
 import com.github.ecc1esia.picture.interfaces.vo.user.UserVO;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Set;
 

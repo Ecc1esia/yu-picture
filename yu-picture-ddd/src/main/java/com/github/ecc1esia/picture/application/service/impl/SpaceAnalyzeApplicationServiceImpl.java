@@ -17,7 +17,7 @@ import com.github.ecc1esia.picture.interfaces.dto.space.analyze.*;
 import com.github.ecc1esia.picture.interfaces.vo.space.analyze.*;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

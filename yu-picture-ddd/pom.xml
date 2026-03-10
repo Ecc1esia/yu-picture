@@ -10,10 +10,10 @@
     <name>yu-picture-backend-ddd</name>
     <description>yu-picture-backend-ddd</description>
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot.version>2.7.6</spring-boot.version>
+        <spring-boot.version>3.2.5</spring-boot.version>
     </properties>
 
     <dependencies>
@@ -32,14 +32,19 @@
         </dependency>
         <!-- 数据库操作：https://mp.baomidou.com/ -->
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.9</version>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>3.0.3</version>
         </dependency>
-        <!-- MyBatis Plus 分页插件 -->
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-jsqlparser-4.9</artifactId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.15</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
         </dependency>
         <!-- Redis -->
         <dependency>
@@ -68,17 +73,17 @@
             <artifactId>disruptor</artifactId>
             <version>3.4.2</version>
         </dependency>
-        <!-- Sa-Token 权限认证 -->
+        <!-- Sa-Token 权限认证 (Spring Boot 3) -->
         <dependency>
             <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-spring-boot-starter</artifactId>
-            <version>1.39.0</version>
+            <artifactId>sa-token-spring-boot3-starter</artifactId>
+            <version>1.44.0</version>
         </dependency>
         <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-redis-jackson</artifactId>
-            <version>1.39.0</version>
+            <version>1.44.0</version>
         </dependency>
         <!-- 提供Redis连接池 -->
         <dependency>
@@ -110,19 +115,17 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.26</version>
         </dependency>
-        <!-- 接口文档：https://doc.xiaominfo.com/docs/quick-start#spring-boot-2-->
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
-            <version>4.4.0</version>
-        </dependency>
-        <!-- ✅ 使用 OpenAPI 3 版本 -->
+        <!-- 接口文档：OpenAPI 3 (Spring Boot 3) -->
         <!-- <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>
-            <version>4.4.0</version> 
-            <!或最新版，如 4.5.0 >
+            <version>4.5.0</version>
         </dependency> -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+            <version>4.5.0</version> <!-- 建议使用 4.5.0 或更高 -->
+        </dependency>
 
         <dependency>
             <groupId>com.mysql</groupId>
@@ -133,7 +136,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-            <version>1.18.22</version>
+            <version>1.18.30</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -156,7 +159,7 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-bom</artifactId>
-                <version>3.5.9</version>
+                <version>3.5.15</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -167,10 +170,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.11.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>21</source>
+                    <target>21</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>

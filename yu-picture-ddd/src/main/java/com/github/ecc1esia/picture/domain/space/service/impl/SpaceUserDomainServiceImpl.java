@@ -7,7 +7,7 @@ import com.github.ecc1esia.picture.domain.space.repository.SpaceUserRepository;
 import com.github.ecc1esia.picture.domain.space.service.SpaceUserDomainService;
 import com.github.ecc1esia.picture.interfaces.dto.spaceuser.SpaceUserQueryRequest;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 

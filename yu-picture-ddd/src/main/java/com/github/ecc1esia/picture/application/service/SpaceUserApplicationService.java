@@ -7,7 +7,7 @@ import com.github.ecc1esia.picture.interfaces.dto.spaceuser.SpaceUserAddRequest;
 import com.github.ecc1esia.picture.interfaces.dto.spaceuser.SpaceUserQueryRequest;
 import com.github.ecc1esia.picture.interfaces.vo.space.SpaceUserVO;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
