@@ -89,4 +89,4 @@ CLAUDE.md
 .env
 
 # 本地文档
-doc/
+doc/.worktrees/
