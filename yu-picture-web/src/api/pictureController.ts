@@ -203,6 +203,42 @@ export async function searchPictureByPictureUsingPost(
   })
 }
 
+/** searchVectorByUpload POST /api/picture/search/vector/by-upload */
+export async function searchVectorByUpload(
+  file: File,
+  spaceId: number,
+  options?: { [key: string]: any }
+) {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('spaceId', spaceId.toString())
+  return request<API.BaseResponseListPictureVO_>('/api/picture/search/vector/by-upload', {
+    method: 'POST',
+    data: formData,
+    requestType: 'form',
+    ...(options || {}),
+  })
+}
+
+/** searchVectorByPicture POST /api/picture/search/vector/by-picture */
+export async function searchVectorByPicture(
+  pictureId: number,
+  spaceId: number,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseListPictureVO_>('/api/picture/search/vector/by-picture', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: {
+      pictureId,
+      spaceId,
+    },
+    ...(options || {}),
+  })
+}
+
 /** listPictureTagCategory GET /api/picture/tag_category */
 export async function listPictureTagCategoryUsingGet(options?: { [key: string]: any }) {
   return request<API.BaseResponsePictureTagCategory_>('/api/picture/tag_category', {

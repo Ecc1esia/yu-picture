@@ -113,4 +113,17 @@ public class CosManager {
     public void deleteObject(String key) {
         cosclient.deleteObject(cosClientConfig.getBucket(), key);
     }
+
+    /**
+     * 获取对象的公网访问URL
+     *
+     * @param key 对象键
+     * @return 公网访问URL
+     */
+    public String getPublicAccessUrl(String key) {
+        return String.format("https://%s.cos.%s.myqcloud.com/%s",
+                cosClientConfig.getBucket(),
+                cosClientConfig.getRegion(),
+                key);
+    }
 }
