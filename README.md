@@ -49,14 +49,14 @@ yu-picture-repro/
 ## 技术栈
 
 - **后端**: Java, Spring Boot, MyBatis Plus, Redis, MySQL
-  - 使用 Spring Boot 构建 RESTful API，结合 MyBatis Plus 实现高效的数据库操作。
-  - Redis 用于缓存高频访问数据，提升系统性能。
+    - 使用 Spring Boot 构建 RESTful API，结合 MyBatis Plus 实现高效的数据库操作。
+    - Redis 用于缓存高频访问数据，提升系统性能。
 - **前端**: Vue.js, Vite, TypeScript, Pinia, Vue Router
-  - Vue.js 和 Vite 提供高效的开发体验，TypeScript 确保代码质量。
-  - Pinia 作为状态管理工具，Vue Router 负责路由管理。
+    - Vue.js 和 Vite 提供高效的开发体验，TypeScript 确保代码质量。
+    - Pinia 作为状态管理工具，Vue Router 负责路由管理。
 - **其他**: Docker, Maven, Hutool 工具库
-  - Docker 容器化部署，简化环境配置。
-  - Maven 管理后端依赖，Hutool 提供便捷的工具类支持。
+    - Docker 容器化部署，简化环境配置。
+    - Maven 管理后端依赖，Hutool 提供便捷的工具类支持。
 
 ## 快速开始
 
@@ -74,8 +74,8 @@ yu-picture-repro/
 
 3. 启动服务：
 
-   - 后端：`mvn spring-boot:run`
-   - 前端：`npm run dev`
+    - 后端：`mvn spring-boot:run`
+    - 前端：`npm run dev`
 
 4. 访问应用：
    打开浏览器，访问 `http://localhost:5173`
@@ -91,19 +91,24 @@ yu-picture-repro/
 
 ## todoList
 
-- ~~原项目基础功能实现~~
-- ~~用户密码加盐升级~~
-- JDK21 升级 测试中
-- SpringBoot3 升级 测试中
+### P1
+- 提供进行 AI文生图 和 AI扩图 两种选择，通过输入提示词生成图像 实现中
+- 同一空间内 图片向量检索
+- 图片向量存储与检索中间件引入
+- 互联网以图搜图api寻找替代品   选择TinEye替换现有百度API
+- 前端隐形水印功能实现    前端
+
+### P2
 - 多租户改造
 - RBAC 权限控制
 - Session 升级 token(暂缓)
 - 前端 UI/UX 升级
 - WebSocket架构升级
-- docker容器化部署
-- 同一空间内 图片向量检索
-- 图片向量存储中间件引入
-- 以图搜图api寻找替代品
-- 前端隐形水印功能实现
-- AI扩图
+- Docker容器化部署
+
+### P3
+- ~~原项目基础功能实现~~
+- ~~用户密码加盐升级~~
+- ~~JDK21 升级~~
+- ~~SpringBoot3 升级~~
 - 性能测试
