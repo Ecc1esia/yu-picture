@@ -180,6 +180,10 @@
                     <source>21</source>
                     <target>21</target>
                     <encoding>UTF-8</encoding>
+                    <parameters>true</parameters>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>

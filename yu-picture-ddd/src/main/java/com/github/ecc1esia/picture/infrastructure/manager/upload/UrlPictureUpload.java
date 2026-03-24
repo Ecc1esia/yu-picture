@@ -9,6 +9,7 @@ import cn.hutool.http.Method;
 import com.github.ecc1esia.picture.infrastructure.exception.BusinessException;
 import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
 import com.github.ecc1esia.picture.infrastructure.exception.ThrowUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -20,6 +21,7 @@ import java.util.List;
  * URL图片上传类，继承自PictureUploadTemplate模板类
  * 该类用于处理通过URL地址上传的图片，确保图片的有效性和合规性
  */
+@Component
 public class UrlPictureUpload extends PictureUploadTemplate {
 
     /**

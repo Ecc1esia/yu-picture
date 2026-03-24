@@ -5,7 +5,7 @@
       <a-space>
         <a-button type="primary" href="/add_picture" target="_blank">+ 创建图片</a-button>
         <a-button type="primary" href="/add_picture/batch" target="_blank" ghost
-          >+ 批量创建图片
+        >+ 批量创建图片
         </a-button>
       </a-space>
     </a-flex>
@@ -205,7 +205,7 @@ const total = ref(0)
 const searchParams = reactive<API.PictureQueryRequest>({
   current: 1,
   pageSize: 10,
-  sortField: 'createTime',
+  sortField: 'create_time',
   sortOrder: 'descend',
 })
 

@@ -12,6 +12,7 @@ import com.qcloud.cos.model.ciModel.persistence.PicOperations;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.Resource;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,8 +72,12 @@ public class CosManager {
         // 创建上传请求对象
         PutObjectRequest putObjectRequest = new PutObjectRequest(cosClientConfig.getBucket(), key, file);
 
-        // 构造webp格式图片的键
-        String webpKey = FileUtil.mainName(key) + ".webp";
+        // 获取文件所在目录路径
+        String dirPath = key.substring(0, key.lastIndexOf("/") + 1);
+
+        // 构造webp格式图片的键（使用完整路径）
+        String webpFileName = FileUtil.mainName(key) + ".webp";
+        String webpKey = dirPath + webpFileName;
 
         // 创建压缩规则对象
         PicOperations.Rule compressRule = new PicOperations.Rule();
@@ -86,14 +91,13 @@ public class CosManager {
         // 如果文件大小超过2KB，添加缩略图生成规则
         if (file.length() > 2 * 1024) {
             PicOperations.Rule thumbnailRule = new PicOperations.Rule();
-
-            // 构造缩略图的键
-            String thumbnailKey = FileUtil.mainName(key) + "_thumbnail." + FileUtil.getSuffix(key);
-
+            // 构造缩略图的键（使用完整路径）
+            String thumbnailFileName = FileUtil.mainName(key) + "_thumbnail." + FileUtil.getSuffix(key);
+            String thumbnailKey = dirPath + thumbnailFileName;
             // 设置缩略图的键和桶，并定义缩略规则
             thumbnailRule.setFileId(thumbnailKey);
             thumbnailRule.setBucket(cosClientConfig.getBucket());
-            thumbnailRule.setRule(String.format("imageMogr2/thumbnail/!%sx%s", 256, 256));
+            thumbnailRule.setRule(String.format("imageMogr2/thumbnail/%sx%s", 256, 256));
             rules.add(thumbnailRule);
         }
 

@@ -5,10 +5,10 @@
       <a-space>
         <a-button type="primary" href="/add_space" target="_blank">+ 创建空间</a-button>
         <a-button type="primary" ghost href="/space_analyze?queryPublic=1" target="_blank"
-          >分析公共图库</a-button
+        >分析公共图库</a-button
         >
         <a-button type="primary" ghost href="/space_analyze?queryAll=1" target="_blank"
-          >分析全部空间</a-button
+        >分析全部空间</a-button
         >
       </a-space>
     </a-flex>
@@ -153,7 +153,7 @@ const total = ref(0)
 const searchParams = reactive<API.SpaceQueryRequest>({
   current: 1,
   pageSize: 10,
-  sortField: 'createTime',
+  sortField: 'create_time',
   sortOrder: 'descend',
 })
 

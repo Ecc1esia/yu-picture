@@ -34,8 +34,7 @@
         <a-button @click="rotateRight" :disabled="!canEdit">向右旋转</a-button>
         <a-button @click="changeScale(1)" :disabled="!canEdit">放大</a-button>
         <a-button @click="changeScale(-1)" :disabled="!canEdit">缩小</a-button>
-        <a-button type="primary" :loading="loading" :disabled="!canEdit" @click="handleConfirm"
-          >确认
+        <a-button type="primary" :loading="loading" :disabled="!canEdit" @click="handleConfirm">确认
         </a-button>
       </a-space>
     </div>
@@ -50,6 +49,8 @@ import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 import PictureEditWebSocket from '@/utils/pictureEditWebSocket.ts'
 import { PICTURE_EDIT_ACTION_ENUM, PICTURE_EDIT_MESSAGE_TYPE_ENUM } from '@/constants/picture.ts'
 import { SPACE_TYPE_ENUM } from '@/constants/space.ts'
+import { VueCropper } from 'vue-cropper'
+import 'vue-cropper/dist/index.css'
 
 interface Props {
   imageUrl?: string
@@ -66,7 +67,7 @@ const isTeamSpace = computed(() => {
 })
 
 // 获取图片裁切器的引用
-const cropperRef = ref()
+const cropperRef = ref<typeof VueCropper>()
 
 // 缩放比例
 const changeScale = (num: number) => {
@@ -80,18 +81,18 @@ const changeScale = (num: number) => {
 
 // 向左旋转
 const rotateLeft = () => {
-  cropperRef.value.rotateLeft()
+  cropperRef.value?.rotateLeft()
   editAction(PICTURE_EDIT_ACTION_ENUM.ROTATE_LEFT)
 }
 
 // 向右旋转
 const rotateRight = () => {
-  cropperRef.value.rotateRight()
+  cropperRef.value?.rotateRight()
   editAction(PICTURE_EDIT_ACTION_ENUM.ROTATE_RIGHT)
 }
 
 const handleConfirm = () => {
-  cropperRef.value.getCropBlob((blob: Blob) => {
+  cropperRef.value?.getCropBlob((blob: Blob) => {
     // blob 为已经裁切好的文件
     const fileName = (props.picture?.name || 'image') + '.png'
     const file = new File([blob], fileName, { type: blob.type })

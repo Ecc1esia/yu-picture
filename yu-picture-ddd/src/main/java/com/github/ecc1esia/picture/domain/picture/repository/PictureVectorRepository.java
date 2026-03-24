@@ -1,4 +1,4 @@
-package com.github.ecc1esia.picture.infrastructure.repository;
+package com.github.ecc1esia.picture.domain.picture.repository;
 
 import com.github.ecc1esia.picture.domain.picture.entity.PictureVectorRecord;
 

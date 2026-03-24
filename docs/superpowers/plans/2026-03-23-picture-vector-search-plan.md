@@ -252,7 +252,7 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
 import com.github.ecc1esia.picture.domain.picture.entity.PictureVectorRecord;
-import com.github.ecc1esia.picture.infrastructure.repository.PictureVectorRepository;
+import com.github.ecc1esia.picture.domain.picture.repository.PictureVectorRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -542,7 +542,7 @@ import com.github.ecc1esia.picture.infrastructure.api.aliyunai.AliYunAiApi;
 import com.github.ecc1esia.picture.infrastructure.exception.BusinessException;
 import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
 import com.github.ecc1esia.picture.infrastructure.exception.ThrowUtils;
-import com.github.ecc1esia.picture.infrastructure.repository.PictureVectorRepository;
+import com.github.ecc1esia.picture.domain.picture.repository.PictureVectorRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

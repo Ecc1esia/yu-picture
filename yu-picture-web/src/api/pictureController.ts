@@ -266,7 +266,7 @@ export async function updatePictureUsingPost(
 export async function uploadPictureUsingPost(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.uploadPictureUsingPOSTParams,
-  body: {},
+  body: API.uploadPictureUsingPOSTParams,
   file?: File,
   options?: { [key: string]: any }
 ) {
@@ -294,11 +294,10 @@ export async function uploadPictureUsingPost(
 
   return request<API.BaseResponsePictureVO_>('/api/picture/upload', {
     method: 'POST',
-    params: {
-      ...params,
+    headers: {
+      'Content-Type': 'multipart/form-data',
     },
     data: formData,
-    requestType: 'form',
     ...(options || {}),
   })
 }

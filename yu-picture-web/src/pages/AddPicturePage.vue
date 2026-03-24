@@ -28,59 +28,29 @@
           AI 扩图
         </a-button>
       </a-space>
-      <ImageCropper
-        ref="imageCropperRef"
-        :imageUrl="picture?.url"
-        :picture="picture"
-        :spaceId="spaceId"
-        :space="space"
-        :onSuccess="onCropSuccess"
-      />
-      <ImageOutPainting
-        ref="imageOutPaintingRef"
-        :picture="picture"
-        :spaceId="spaceId"
-        :onSuccess="onImageOutPaintingSuccess"
-      />
+      <ImageCropper ref="imageCropperRef" :imageUrl="picture?.url" :picture="picture" :spaceId="spaceId" :space="space"
+                    :onSuccess="onCropSuccess" />
+      <ImageOutPainting ref="imageOutPaintingRef" :picture="picture" :spaceId="spaceId"
+                        :onSuccess="onImageOutPaintingSuccess" />
     </div>
 
     <!-- 图片信息表单 -->
-    <a-form
-      v-if="picture"
-      name="pictureForm"
-      layout="vertical"
-      :model="pictureForm"
-      @finish="handleSubmit"
-    >
+    <a-form v-if="picture" name="pictureForm" layout="vertical" :model="pictureForm" @finish="handleSubmit">
       <a-form-item name="name" label="名称">
         <a-input v-model:value="pictureForm.name" placeholder="请输入名称" allow-clear />
       </a-form-item>
       <a-form-item name="introduction" label="简介">
-        <a-textarea
-          v-model:value="pictureForm.introduction"
-          placeholder="请输入简介"
-          :auto-size="{ minRows: 2, maxRows: 5 }"
-          allow-clear
-        />
+        <a-textarea v-model:value="pictureForm.introduction" placeholder="请输入简介" :auto-size="{ minRows: 2, maxRows: 5 }"
+                    allow-clear />
       </a-form-item>
 
       <a-form-item name="category" label="分类">
-        <a-auto-complete
-          v-model:value="pictureForm.category"
-          placeholder="请输入分类"
-          :options="categoryOptions"
-          allow-clear
-        />
+        <a-auto-complete v-model:value="pictureForm.category" placeholder="请输入分类" :options="categoryOptions"
+                         allow-clear />
       </a-form-item>
 
       <a-form-item name="tags" label="标签">
-        <a-select
-          v-model:value="pictureForm.tags"
-          mode="tags"
-          placeholder="请输入标签"
-          :options="tagOptions"
-          allow-clear
-        />
+        <a-select v-model:value="pictureForm.tags" mode="tags" placeholder="请输入标签" :options="tagOptions" allow-clear />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" html-type="submit" style="width: 100%">创建</a-button>
@@ -115,6 +85,7 @@ const uploadType = ref<'file' | 'url'>('file')
 // 空间id
 const spaceId = computed<number | undefined>(() => {
   const id = Number(route.query?.spaceId)
+  console.log('spaceId', id)
   return isNaN(id) ? undefined : id
 })
 
@@ -137,9 +108,13 @@ const handleSubmit = async (values: API.PictureEditRequest) => {
   if (!pictureId) {
     return
   }
+
+  const space = spaceId.value
+  if (!space) {
+    return
+  }
   const res = await editPictureUsingPost({
     id: pictureId,
-    // spaceId: spaceId.value,
     ...values,
   })
   // 操作成功

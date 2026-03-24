@@ -22,6 +22,7 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
 import { uploadPictureUsingPost } from '@/api/pictureController.ts'
+// import type { RcFile } from 'ant-design-vue/es/vc-upload/interface'
 
 interface Props {
   picture?: API.PictureVO
@@ -36,22 +37,23 @@ const loading = ref<boolean>(false)
  * 上传图片
  * @param file
  */
-const handleUpload = async ({ file }: any) => {
+const handleUpload = async ({ file }: {file : File}) => {
   loading.value = true
   try {
     const params: API.PictureUploadRequest = props.picture ? { id: props.picture.id } : {}
     params.spaceId = props.spaceId
-    const res = await uploadPictureUsingPost(params, {}, file)
-    if (res.data.code === 0 && res.data.data) {
+    console.log('上传图片，参数', params, file.name)
+    const res = await uploadPictureUsingPost(params, params, file)
+    if (res.data?.code === 0 && res.data?.data) {
       message.success('图片上传成功')
       // 将上传成功的图片信息传递给父组件
       props.onSuccess?.(res.data.data)
     } else {
       message.error('图片上传失败，' + res.data.message)
     }
-  } catch (error: Error) {
+  } catch (error) {
     console.error('图片上传失败', error)
-    message.error('图片上传失败，' + error.message)
+    message.error('图片上传失败，' + error)
   }
   loading.value = false
 }
