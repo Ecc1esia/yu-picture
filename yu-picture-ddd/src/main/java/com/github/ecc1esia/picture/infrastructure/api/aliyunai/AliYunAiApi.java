@@ -9,7 +9,10 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.github.ecc1esia.picture.infrastructure.api.aliyunai.model.CreateOutPaintingTaskRequest;
 import com.github.ecc1esia.picture.infrastructure.api.aliyunai.model.CreateOutPaintingTaskResponse;
+import com.github.ecc1esia.picture.infrastructure.api.aliyunai.model.CreateTextToImageTaskRequest;
+import com.github.ecc1esia.picture.infrastructure.api.aliyunai.model.CreateTextToImageTaskResponse;
 import com.github.ecc1esia.picture.infrastructure.api.aliyunai.model.GetOutPaintingTaskResponse;
+import com.github.ecc1esia.picture.infrastructure.api.aliyunai.model.GetTextToImageTaskResponse;
 import com.github.ecc1esia.picture.infrastructure.exception.BusinessException;
 import com.github.ecc1esia.picture.infrastructure.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +36,10 @@ public class AliYunAiApi {
 
     // 查询任务状态
     public static final String GET_OUT_PAINTING_TASK_URL = "https://dashscope.aliyuncs.com/api/v1/tasks/%s";
-
+    // 百炼多模态Embedding API地址
+    public static final String MULTIMODAL_EMBEDDING_URL = "https://dashscope.aliyuncs.com/api/v1/services/embeddings/multimodal-embedding/multimodal-embedding";
+    // 文生图
+    public static final String TEXT_TO_IMAGE_URL = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis";
 
     /**
      * 创建任务
@@ -96,32 +102,163 @@ public class AliYunAiApi {
         }
     }
 
-    // 百炼多模态Embedding API地址
-    public static final String MULTIMODAL_EMBEDDING_URL = "https://dashscope.aliyuncs.com/api/v1/services/embeddings/multimodal/embedding";
+
+    /**
+     * 创建文生图任务
+     */
+    public CreateTextToImageTaskResponse createTextToImageTask(CreateTextToImageTaskRequest request) {
+        if (request == null) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "文生图参数为空");
+        }
+
+        HttpRequest httpRequest = HttpRequest.post(TEXT_TO_IMAGE_URL)
+                .header("Authorization", "Bearer " + apiKey)
+                .header("X-DashScope-Async", "true")
+                .header("Content-Type", "application/json")
+                .body(JSONUtil.toJsonStr(request));
+
+        try (HttpResponse httpResponse = httpRequest.execute()) {
+            if (!httpResponse.isOk()) {
+                log.error("文生图请求异常:{}", httpResponse.body());
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "文生图请求失败");
+            }
+
+            CreateTextToImageTaskResponse response = JSONUtil.toBean(httpResponse.body(), CreateTextToImageTaskResponse.class);
+
+            if (response.getCode() != null) {
+                log.error("文生图请求异常:{}", httpResponse.body());
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "文生图失败," + response.getMessage());
+            }
+            return response;
+        }
+    }
+
+    /**
+     * 查询文生图任务结果
+     */
+    public GetTextToImageTaskResponse getTextToImageTask(String taskId) {
+        if (StrUtil.isBlank(taskId)) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "任务ID不能为空");
+        }
+
+        String url = String.format(GET_OUT_PAINTING_TASK_URL, taskId);
+        try (HttpResponse httpResponse = HttpRequest.get(url)
+                .header("Authorization", "Bearer " + apiKey)
+                .execute()) {
+            if (!httpResponse.isOk()) {
+                log.error("查询文生图任务异常:{}", httpResponse.body());
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "查询文生图任务失败");
+            }
+            return JSONUtil.toBean(httpResponse.body(), GetTextToImageTaskResponse.class);
+        }
+    }
 
     /**
      * 提取图片向量（使用百炼多模态Embedding API）
+     *
      * @param imageUrl 图片URL（公网可访问）
      * @return float[] 向量数组
      */
     public float[] extractImageVector(String imageUrl) {
+        return extractImageVector(imageUrl, false);
+    }
+
+    /**
+     * 提取融合向量（文本+图像，使用百炼多模态Embedding API）
+     *
+     * @param imageUrl 图片URL（公网可访问）
+     * @param text     文本内容（可为空）
+     * @return float[] 融合向量数组
+     */
+    public float[] extractFusionVector(String imageUrl, String text) {
+        return extractFusionVector(imageUrl, text, "qwen3-vl-embedding");
+    }
+
+    /**
+     * 提取融合向量（文本+图像，使用百炼多模态Embedding API）
+     *
+     * @param imageUrl 图片URL（公网可访问）
+     * @param text     文本内容（可为空）
+     * @param model    模型名称
+     * @return float[] 融合向量数组
+     */
+    public float[] extractFusionVector(String imageUrl, String text, String model) {
         if (StrUtil.isBlank(imageUrl)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "图片URL不能为空");
         }
 
-        // 构建请求体
+        // 构建请求体（按官方文档格式）
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("model", "qwen-vl-embedding"); // 多模态embedding模型
+        requestBody.put("model", model);
 
-        List<Map<String, String>> input = new ArrayList<>();
+        // 构建 contents 数组
+        List<Map<String, String>> contents = new ArrayList<>();
+
+        // 添加文本（如果提供）
+        if (StrUtil.isNotBlank(text)) {
+            Map<String, String> textItem = new HashMap<>();
+            textItem.put("text", text);
+            contents.add(textItem);
+        }
+
+        // 添加图像
         Map<String, String> imageItem = new HashMap<>();
         imageItem.put("image", imageUrl);
-        input.add(imageItem);
+        contents.add(imageItem);
 
         Map<String, Object> inputWrapper = new HashMap<>();
-        inputWrapper.put("input", input);
+        inputWrapper.put("contents", contents);
         requestBody.put("input", inputWrapper);
 
+        // 添加 parameters（融合向量必须 enable_fusion: true）
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("enable_fusion", true);
+        requestBody.put("parameters", parameters);
+
+        return doEmbeddingRequest(requestBody);
+    }
+
+    /**
+     * 提取图片向量（使用百炼多模态Embedding API）
+     *
+     * @param imageUrl     图片URL（公网可访问）
+     * @param enableFusion 是否启用融合向量
+     * @return float[] 向量数组
+     */
+    public float[] extractImageVector(String imageUrl, boolean enableFusion) {
+        if (StrUtil.isBlank(imageUrl)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "图片URL不能为空");
+        }
+
+        // 构建请求体（按官方文档格式）
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("model", "qwen3-vl-embedding");
+
+        // 构建 contents 数组
+        List<Map<String, String>> contents = new ArrayList<>();
+        Map<String, String> imageItem = new HashMap<>();
+        imageItem.put("image", imageUrl);
+        contents.add(imageItem);
+
+        Map<String, Object> inputWrapper = new HashMap<>();
+        inputWrapper.put("contents", contents);
+        requestBody.put("input", inputWrapper);
+
+        // 添加 parameters
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("enable_fusion", enableFusion);
+        requestBody.put("parameters", parameters);
+
+        return doEmbeddingRequest(requestBody);
+    }
+
+    /**
+     * 执行向量化请求的通用方法
+     *
+     * @param requestBody 请求体
+     * @return float[] 向量数组
+     */
+    private float[] doEmbeddingRequest(Map<String, Object> requestBody) {
         try {
             HttpResponse httpResponse = HttpRequest.post(MULTIMODAL_EMBEDDING_URL)
                     .header("Authorization", "Bearer " + apiKey)
@@ -130,20 +267,31 @@ public class AliYunAiApi {
                     .execute();
 
             if (!httpResponse.isOk()) {
-                log.error("提取图片向量失败: {}", httpResponse.body());
-                throw new BusinessException(ErrorCode.OPERATION_ERROR, "提取图片向量失败");
+                log.error("提取向量失败: {}", httpResponse.body());
+                log.error("错误响应: {}", httpResponse);
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "提取向量失败");
             }
 
             JSONObject jsonObject = JSONUtil.parseObj(httpResponse.body());
-            // 解析返回的向量数据（具体格式需参考阿里云百炼API文档调整）
-            JSONObject data = jsonObject.getJSONObject("data");
-            if (data == null) {
-                throw new BusinessException(ErrorCode.OPERATION_ERROR, "提取图片向量返回数据格式错误");
+            JSONObject output = jsonObject.getJSONObject("output");
+            if (output == null) {
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "提取向量返回数据格式错误");
             }
 
-            JSONArray embeddings = data.getJSONArray("embeddings");
+            // 融合向量格式：output.embedding (直接数组)
+            if (output.containsKey("embedding")) {
+                JSONArray embeddingArray = output.getJSONArray("embedding");
+                float[] vector = new float[embeddingArray.size()];
+                for (int i = 0; i < embeddingArray.size(); i++) {
+                    vector[i] = embeddingArray.getFloat(i);
+                }
+                return vector;
+            }
+
+            // 标准格式：output.embeddings[0].embedding
+            JSONArray embeddings = output.getJSONArray("embeddings");
             if (embeddings == null || embeddings.isEmpty()) {
-                throw new BusinessException(ErrorCode.OPERATION_ERROR, "提取图片向量返回为空");
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "提取向量返回为空");
             }
 
             JSONObject firstEmbedding = embeddings.getJSONObject(0);
@@ -154,14 +302,13 @@ public class AliYunAiApi {
                 vector[i] = embeddingVector.getFloat(i);
             }
 
-            log.info("成功提取图片向量, imageUrl={}, dimension={}", imageUrl, vector.length);
             return vector;
 
         } catch (BusinessException e) {
             throw e;
         } catch (Exception e) {
-            log.error("提取图片向量异常, imageUrl={}", imageUrl, e);
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "提取图片向量异常: " + e.getMessage());
+            log.error("提取向量异常", e);
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "提取向量异常: " + e.getMessage());
         }
     }
 }

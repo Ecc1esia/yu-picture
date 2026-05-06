@@ -84,6 +84,7 @@ coverage/
 
 CLAUDE.md
 .claude
+.agents
 
 # 环境变量
 .env

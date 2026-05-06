@@ -13,8 +13,9 @@ public interface PictureVectorService {
     /**
      * 保存图片向量到ES
      * @param picture 图片实体
+     * @return 是否保存成功
      */
-    void savePictureVector(Picture picture);
+    boolean savePictureVector(Picture picture);
 
     /**
      * 通过图片URL提取向量并搜索相似图片
@@ -33,6 +34,12 @@ public interface PictureVectorService {
      * @return 相似图片列表
      */
     List<PictureVectorRecord> searchSimilarPicturesById(Long spaceId, Long pictureId, int topK);
+
+    /**
+     * 重新索引空间下所有图片的向量
+     * @param spaceId 空间ID
+     */
+    void reindexAllPictures(Long spaceId);
 
     /**
      * 删除图片向量

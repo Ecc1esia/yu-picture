@@ -37,7 +37,15 @@
           {{ formatTime(record.createTime) }}
         </template>
         <template v-else-if="column.key === 'action'">
-          <a-button type="primary" @click="doDelete(record.id)">删除</a-button>
+          <a-space wrap>
+            <a-select
+              v-model:value="record.userRole"
+              :options="USER_ROLE_OPTIONS"
+              style="min-width: 100px"
+              @change="(value: string) => doUpdateRole(record.id, value)"
+            />
+            <a-button type="primary" danger @click="doDelete(record.id)">删除</a-button>
+          </a-space>
         </template>
       </template>
     </a-table>
@@ -46,9 +54,15 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
-import { deleteUserUsingPost, listUserVoByPageUsingPost } from '@/api/userController.ts'
+import { deleteUserUsingPost, listUserVoByPageUsingPost, updateUserUsingPost } from '@/api/userController.ts'
 import { message, type PaginationProps } from 'ant-design-vue'
 import dayjs from 'dayjs'
+
+// 用户角色选项
+const USER_ROLE_OPTIONS = [
+  { label: '普通用户', value: 'user' },
+  { label: '管理员', value: 'admin' },
+]
 
 const columns = [
   {
@@ -151,6 +165,20 @@ const doDelete = async (id: number) => {
     fetchData()
   } else {
     message.error('删除失败，' + res.data.message)
+  }
+}
+
+// 修改用户角色
+const doUpdateRole = async (id: number, userRole: string) => {
+  if (!id) {
+    return
+  }
+  const res = await updateUserUsingPost({ id, userRole })
+  if (res.data.code === 0) {
+    message.success('修改角色成功')
+  } else {
+    message.error('修改角色失败，' + res.data.message)
+    fetchData()
   }
 }
 </script>

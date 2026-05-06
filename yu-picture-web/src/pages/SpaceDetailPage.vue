@@ -22,6 +22,25 @@
           + 创建图片
         </a-button>
         <a-button
+          v-if="canUploadPicture"
+          type="primary"
+          ghost
+          :icon="h(FileSearchOutlined)"
+          @click="openVectorSearchModal"
+        >
+          向量检索
+        </a-button>
+        <a-button
+          v-if="canEditPicture"
+          type="primary"
+          ghost
+          :icon="h(ReloadOutlined)"
+          @click="handleReindex"
+          :loading="reindexLoading"
+        >
+          重新索引
+        </a-button>
+        <a-button
           v-if="canManageSpaceUser"
           type="primary"
           ghost
@@ -75,6 +94,7 @@
       :showOp="true"
       :canEdit="canEditPicture"
       :canDelete="canDeletePicture"
+      :spaceId="id"
       :onReload="fetchData"
     />
 
@@ -88,9 +108,13 @@
     />
     <BatchEditPictureModal
       ref="batchEditPictureModalRef"
-      :spaceId="id"
+      :spaceId="Number(id)"
       :pictureList="dataList"
       :onSuccess="onBatchEditPictureSuccess"
+    />
+    <VectorSearchModal
+      v-model:visible="vectorSearchVisible"
+      :spaceId="Number(id)"
     />
   </div>
 </template>
@@ -102,6 +126,7 @@ import { message } from 'ant-design-vue'
 import {
   listPictureVoByPageUsingPost,
   searchPictureByColorUsingPost,
+  reindexAllPictures,
 } from '@/api/pictureController.ts'
 import { formatSize } from '@/utils'
 import PictureList from '@/components/PictureList.vue'
@@ -109,7 +134,8 @@ import PictureSearchForm from '@/components/PictureSearchForm.vue'
 import { ColorPicker } from 'vue3-colorpicker'
 import 'vue3-colorpicker/style.css'
 import BatchEditPictureModal from '@/components/BatchEditPictureModal.vue'
-import { BarChartOutlined, EditOutlined, TeamOutlined } from '@ant-design/icons-vue'
+import VectorSearchModal from '@/components/VectorSearchModal.vue'
+import { BarChartOutlined, EditOutlined, TeamOutlined, FileSearchOutlined, ReloadOutlined } from '@ant-design/icons-vue'
 import { SPACE_PERMISSION_ENUM, SPACE_TYPE_MAP } from '../constants/space.ts'
 
 interface Props {
@@ -231,6 +257,31 @@ const onColorChange = async (color: string) => {
 
 // ---- 批量编辑图片 -----
 const batchEditPictureModalRef = ref()
+
+// ---- 向量检索 -----
+const vectorSearchVisible = ref(false)
+
+const openVectorSearchModal = () => {
+  vectorSearchVisible.value = true
+}
+
+// ---- 重新索引 -----
+const reindexLoading = ref(false)
+
+const handleReindex = async () => {
+  reindexLoading.value = true
+  try {
+    const res = await reindexAllPictures(props.id)
+    if (res.data.code === 0) {
+      message.success(res.data.data ?? '重新索引完成')
+    } else {
+      message.error('重新索引失败：' + res.data.message)
+    }
+  } catch (e) {
+    message.error('重新索引失败：' + e)
+  }
+  reindexLoading.value = false
+}
 
 // 批量编辑图片成功
 const onBatchEditPictureSuccess = () => {

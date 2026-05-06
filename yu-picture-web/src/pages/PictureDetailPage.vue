@@ -77,11 +77,20 @@
             <a-button v-if="canDelete" :icon="h(DeleteOutlined)" danger @click="doDelete">
               删除
             </a-button>
+            <a-button
+              v-if="canEdit && picture.url"
+              :icon="h(ExperimentOutlined)"
+              type="default"
+              @click="openStyleTransfer"
+            >
+              AI 风格迁移
+            </a-button>
           </a-space>
         </a-card>
       </a-col>
     </a-row>
-    <ShareModal title="shareModalRef" :link="shareLink" />
+    <ShareModal ref="shareModalRef" title="shareModalRef" :link="shareLink" />
+    <StyleTransfer ref="styleTransferRef" />
   </div>
 </template>
 
@@ -93,11 +102,13 @@ import {
   DeleteOutlined,
   DownloadOutlined,
   EditOutlined,
+  ExperimentOutlined,
   ShareAltOutlined,
 } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import { downloadImage, formatSize, toHexColor } from '@/utils'
 import ShareModal from '@/components/ShareModal.vue'
+import StyleTransfer from '@/components/StyleTransfer.vue'
 import { SPACE_PERMISSION_ENUM } from '@/constants/space.ts'
 
 interface Props {
@@ -179,6 +190,15 @@ const doShare = () => {
   shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.value.id}`
   if (shareModalRef.value) {
     shareModalRef.value.openModal()
+  }
+}
+
+// ---- AI 风格迁移 ----
+const styleTransferRef = ref()
+
+const openStyleTransfer = () => {
+  if (styleTransferRef.value && picture.value.url) {
+    styleTransferRef.value.open(Number(props.id), picture.value.url)
   }
 }
 </script>

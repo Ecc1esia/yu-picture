@@ -101,8 +101,8 @@ import {
   SPACE_LEVEL_OPTIONS,
   SPACE_TYPE_MAP,
   SPACE_TYPE_OPTIONS,
-} from '../../constants/space.ts'
-import { formatSize } from '../../utils'
+} from '@/constants/space.ts'
+import { formatSize } from '@/utils'
 
 const columns = [
   {

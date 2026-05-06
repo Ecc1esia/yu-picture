@@ -2,8 +2,6 @@ package com.github.ecc1esia.picture.interfaces.controller;
 
 import com.github.ecc1esia.picture.domain.picture.entity.PictureVectorRecord;
 import com.github.ecc1esia.picture.domain.picture.service.PictureVectorService;
-import com.github.ecc1esia.picture.domain.user.entity.User;
-import com.github.ecc1esia.picture.application.service.UserApplicationService;
 import com.github.ecc1esia.picture.infrastructure.api.CosManager;
 import com.github.ecc1esia.picture.infrastructure.common.BaseResponse;
 import com.github.ecc1esia.picture.infrastructure.common.ResultUtils;
@@ -22,6 +20,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -44,9 +43,6 @@ public class PictureVectorController {
     private PictureVectorService pictureVectorService;
 
     @Resource
-    private UserApplicationService userApplicationService;
-
-    @Resource
     private CosManager cosManager;
 
     /**
@@ -67,9 +63,6 @@ public class PictureVectorController {
         String contentType = file.getContentType();
         ThrowUtils.throwIf(!ALLOWED_IMAGE_TYPES.contains(contentType),
                 ErrorCode.PARAMS_ERROR, "只能上传图片文件");
-
-        // 获取登录用户
-        User loginUser = userApplicationService.getLoginUser(request);
 
         // 上传到COS获取公网URL
         String tempImageUrl = uploadToCosAndGetUrl(file);
@@ -100,9 +93,6 @@ public class PictureVectorController {
         ThrowUtils.throwIf(request.getPictureId() == null, ErrorCode.PARAMS_ERROR, "图片ID不能为空");
         ThrowUtils.throwIf(request.getSpaceId() == null, ErrorCode.PARAMS_ERROR, "空间ID不能为空");
 
-        // 获取登录用户
-        User loginUser = userApplicationService.getLoginUser(httpRequest);
-
         // 搜索相似图片
         List<PictureVectorRecord> results = pictureVectorService.searchSimilarPicturesById(
                 request.getSpaceId(), request.getPictureId(), DEFAULT_TOP_K);
@@ -113,6 +103,19 @@ public class PictureVectorController {
                 .collect(Collectors.toList());
 
         return ResultUtils.success(voList);
+    }
+
+    /**
+     * 重新索引指定空间下的所有图片向量
+     */
+    @PostMapping("/reindex")
+    @SaSpaceCheckPermission(value = SpaceUserPermissionConstant.PICTURE_EDIT)
+    public BaseResponse<String> reindexAllPictures(@RequestParam("spaceId") Long spaceId) {
+        ThrowUtils.throwIf(spaceId == null, ErrorCode.PARAMS_ERROR, "空间ID不能为空");
+        long startTime = System.currentTimeMillis();
+        pictureVectorService.reindexAllPictures(spaceId);
+        long cost = System.currentTimeMillis() - startTime;
+        return ResultUtils.success("重新索引完成，耗时：" + cost + "ms");
     }
 
     /**
@@ -132,6 +135,7 @@ public class PictureVectorController {
      * 将上传文件保存到COS并返回公网访问URL
      */
     private String uploadToCosAndGetUrl(MultipartFile file) {
+        File tempFile = null;
         try {
             // 生成唯一文件名
             String originalFilename = file.getOriginalFilename();
@@ -141,18 +145,23 @@ public class PictureVectorController {
             String key = "temp/vector-search/" + UUID.randomUUID().toString() + extension;
 
             // 转换为File并上传
-            File tempFile = File.createTempFile("upload-", extension);
+            tempFile = File.createTempFile("upload-", extension);
             file.transferTo(tempFile);
             cosManager.putObject(key, tempFile);
-
-            // 删除临时文件
-            tempFile.delete();
 
             // 返回COS公网访问URL
             return cosManager.getPublicAccessUrl(key);
         } catch (IOException e) {
             log.error("上传文件到COS失败", e);
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "图片上传失败");
+        } finally {
+            if (tempFile != null) {
+                try {
+                    Files.delete(tempFile.toPath());
+                } catch (IOException e) {
+                    log.warn("临时文件删除失败: {}", tempFile.getAbsolutePath(), e);
+                }
+            }
         }
     }
 }

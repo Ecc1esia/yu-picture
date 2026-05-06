@@ -20,6 +20,9 @@
       <a-form-item label="用户ID" name="userId">
         <a-input v-model:value="formData.userId" placeholder="请输入用户ID" allow-clear />
       </a-form-item>
+      <a-form-item label="角色" name="spaceRole">
+        <a-select v-model:value="formData.spaceRole" :options="SPACE_ROLE_OPTIONS" placeholder="请选择角色" style="min-width: 120px" />
+      </a-form-item>
       <a-form-item>
         <a-button type="primary" html-type="submit">添加用户</a-button>
       </a-form-item>
@@ -96,7 +99,7 @@ const columns = [
 // 定义数据
 const dataList = ref<API.SpaceUserVO[]>([])
 // 添加成员表单
-const formData = reactive<API.SpaceUserAddRequest>({})
+const formData = reactive<API.SpaceUserAddRequest>({ spaceRole: 'viewer' })
 
 // 获取数据
 const fetchData = async () => {

@@ -60,6 +60,9 @@
               <a-tooltip title="以图搜图">
                 <SearchOutlined class="action-icon" @click="(e) => doSearch(picture, e)" />
               </a-tooltip>
+              <a-tooltip title="向量检索">
+                <FileSearchOutlined class="action-icon" @click="(e) => doVectorSearch(picture, e)" />
+              </a-tooltip>
               <a-tooltip v-if="canEdit" title="编辑">
                 <EditOutlined class="action-icon" @click="(e) => doEdit(picture, e)" />
               </a-tooltip>
@@ -71,7 +74,12 @@
         </a-list-item>
       </template>
     </a-list>
-    <ShareModal title="shareModalRef" :link="shareLink" />
+    <ShareModal ref="shareModalRef" :link="shareLink" />
+    <VectorSearchModal
+      v-model:visible="vectorSearchVisible"
+      :spaceId="spaceId ?? 0"
+      :pictureId="selectedPictureId"
+    />
   </div>
 </template>
 
@@ -83,10 +91,12 @@ import {
   SearchOutlined,
   ShareAltOutlined,
   EyeOutlined,
+  FileSearchOutlined,
 } from '@ant-design/icons-vue'
 import { deletePictureUsingPost } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
 import ShareModal from '@/components/ShareModal.vue'
+import VectorSearchModal from '@/components/VectorSearchModal.vue'
 import { ref } from 'vue'
 
 interface Props {
@@ -96,6 +106,7 @@ interface Props {
   canEdit?: boolean
   canDelete?: boolean
   onReload?: () => void
+  spaceId?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -167,6 +178,139 @@ const doShare = (picture: API.PictureVO, e: Event) => {
     shareModalRef.value.openModal()
   }
 }
+
+// ----- 向量检索操作 ----
+const vectorSearchVisible = ref(false)
+const selectedPictureId = ref<number>()
+
+const doVectorSearch = (picture: API.PictureVO, e: Event) => {
+  // 阻止冒泡
+  e.stopPropagation()
+  selectedPictureId.value = picture.id
+  vectorSearchVisible.value = true
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+.picture-list {
+  width: 100%;
+}
+
+.picture-grid {
+  width: 100%;
+}
+
+.picture-item {
+  padding: 8px !important;
+}
+
+.picture-card {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.picture-card :deep(.ant-card-body) {
+  padding: 0;
+}
+
+.picture-card :deep(.ant-card-cover) {
+  border-radius: 8px 8px 0 0;
+}
+
+.picture-card :deep(.image-wrapper) {
+  position: relative;
+  width: 100%;
+  padding-top: 75%;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.picture-card :deep(.picture-image) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.picture-card:hover :deep(.picture-image) {
+  transform: scale(1.05);
+}
+
+.picture-card :deep(.image-overlay) {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.picture-card:hover :deep(.image-overlay) {
+  opacity: 1;
+}
+
+.picture-card :deep(.preview-icon) {
+  font-size: 32px;
+  color: white;
+}
+
+.picture-card :deep(.ant-card-meta) {
+  padding: 12px;
+}
+
+.picture-card :deep(.ant-card-meta-title) {
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picture-card :deep(.ant-card-actions) {
+  margin: 0;
+  padding: 0;
+  height: 42px;
+  line-height: 42px;
+}
+
+.picture-card :deep(.ant-card-actions > li) {
+  width: 42px !important;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.picture-card :deep(.ant-card-actions > li:not(:last-child)) {
+  border-right: 1px solid #f0f0f0 !important;
+}
+
+.picture-card :deep(.ant-card-actions > li > span) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.action-icon {
+  font-size: 16px;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.action-icon:hover {
+  color: #1890ff;
+}
+
+.delete-icon:hover {
+  color: #ff4d4f !important;
+}
+
+/* 调整 a-list 的 gutter 增加间距 */
+:deep(.ant-list-grid .ant-col) {
+  padding-bottom: 16px;
+}
+</style>

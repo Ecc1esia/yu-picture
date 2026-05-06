@@ -294,6 +294,12 @@ public class PictureDomainServiceImpl
 
     @Override
     public void deletePicture(long pictureId, User loginUser) {
+        // 查询图片是否存在
+        Picture picture = pictureRepository.getById(pictureId);
+        ThrowUtils.throwIf(picture == null, ErrorCode.NOT_FOUND_ERROR, "图片不存在");
+        // 删除数据库记录
+        boolean removed = pictureRepository.removeById(pictureId);
+        ThrowUtils.throwIf(!removed, ErrorCode.OPERATION_ERROR, "删除图片失败");
         // 删除图片向量
         pictureVectorService.deletePictureVector(pictureId);
     }
@@ -317,6 +323,11 @@ public class PictureDomainServiceImpl
         // 操作数据库
         int result = pictureMapper.updateById(picture);
         ThrowUtils.throwIf(result == 0, ErrorCode.OPERATION_ERROR);
+        // 重新索引图片向量（编辑名称/分类/标签等元数据后需更新向量）
+        Picture updatedPicture = pictureMapper.selectById(id);
+        if (updatedPicture != null) {
+            savePictureVectorAsync(updatedPicture);
+        }
     }
 
     @Override

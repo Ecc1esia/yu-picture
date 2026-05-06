@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,14 +36,16 @@ public class PictureVectorServiceImpl implements PictureVectorService {
     private PictureRepository pictureRepository;
 
     @Override
-    public void savePictureVector(Picture picture) {
+    public boolean savePictureVector(Picture picture) {
         if (picture == null || picture.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "图片信息不完整");
         }
 
         try {
-            // 提取图片向量
-            float[] vector = aliYunAiApi.extractImageVector(picture.getUrl());
+            // 拼接图片相关文本内容用于融合向量
+            String textDescription = buildTextDescription(picture);
+            // 提取融合向量（文本 + 图像）
+            float[] vector = aliYunAiApi.extractFusionVector(picture.getUrl(), textDescription);
 
             // 构建向量记录
             PictureVectorRecord record = PictureVectorRecord.builder()
@@ -58,13 +61,23 @@ public class PictureVectorServiceImpl implements PictureVectorService {
             // 保存到ES
             pictureVectorRepository.save(record);
             log.info("图片向量保存成功, pictureId={}", picture.getId());
+            return true;
 
         } catch (Exception e) {
             log.error("保存图片向量失败, pictureId={}", picture.getId(), e);
             // 向量保存失败不影响主流程，仅记录日志
+            return false;
         }
     }
 
+    /**
+     * 向量检索
+     *
+     * @param spaceId  空间ID
+     * @param imageUrl 图片URL
+     * @param topK     返回数量
+     * @return 向量检索结果
+     */
     @Override
     public List<PictureVectorRecord> searchSimilarPictures(Long spaceId, String imageUrl, int topK) {
         if (spaceId == null) {
@@ -80,10 +93,8 @@ public class PictureVectorServiceImpl implements PictureVectorService {
 
             // ES KNN搜索
             List<PictureVectorRecord> results = pictureVectorRepository.search(spaceId, queryVector, topK);
-
             // 过滤已删除的图片
             return filterDeletedPictures(results);
-
         } catch (BusinessException e) {
             throw e;
         } catch (Exception e) {
@@ -108,6 +119,29 @@ public class PictureVectorServiceImpl implements PictureVectorService {
         }
 
         return searchSimilarPictures(spaceId, sourcePicture.getUrl(), topK);
+    }
+
+    @Override
+    public void reindexAllPictures(Long spaceId) {
+        if (spaceId == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "空间ID不能为空");
+        }
+
+        List<Picture> pictures = pictureRepository.lambdaQuery()
+                .eq(Picture::getSpaceId, spaceId)
+                .eq(Picture::getIsDelete, 0)
+                .list();
+
+        int successCount = 0;
+        int failCount = 0;
+        for (Picture picture : pictures) {
+            if (savePictureVector(picture)) {
+                successCount++;
+            } else {
+                failCount++;
+            }
+        }
+        log.info("重新索引完成: total={}, success={}, fail={}", pictures.size(), successCount, failCount);
     }
 
     @Override
@@ -138,11 +172,55 @@ public class PictureVectorServiceImpl implements PictureVectorService {
         List<Long> existingIds = pictures.stream()
                 .filter(p -> p.getIsDelete() == 0) // 未删除
                 .map(Picture::getId)
-                .collect(Collectors.toList());
+                .toList();
 
         // 过滤
         return records.stream()
                 .filter(r -> existingIds.contains(r.getPictureId()))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 构建图片的文本描述用于融合向量
+     *
+     * @param picture 图片对象
+     * @return 拼接的文本描述
+     */
+    private String buildTextDescription(Picture picture) {
+        StringBuilder sb = new StringBuilder();
+
+        // 图片名称
+        if (StrUtil.isNotBlank(picture.getName())) {
+            sb.append("图片名称：").append(picture.getName()).append("。");
+        }
+
+        // 简介
+        if (StrUtil.isNotBlank(picture.getIntroduction())) {
+            sb.append("简介：").append(picture.getIntroduction()).append("。");
+        }
+
+        // 分类
+        if (StrUtil.isNotBlank(picture.getCategory())) {
+            sb.append("分类：").append(picture.getCategory()).append("。");
+        }
+
+        // 标签
+        if (StrUtil.isNotBlank(picture.getTags())) {
+            sb.append("标签：").append(picture.getTags()).append("。");
+        }
+
+        // 图片格式
+        if (StrUtil.isNotBlank(picture.getPicFormat())) {
+            sb.append("格式：").append(picture.getPicFormat()).append("。");
+        }
+
+        // 主色调
+        if (StrUtil.isNotBlank(picture.getPicColor())) {
+            sb.append("主色调：").append(picture.getPicColor()).append("。");
+        }
+
+        String result = sb.toString();
+        log.debug("构建图片文本描述, pictureId={}, text={}", picture.getId(), result);
+        return result;
     }
 }

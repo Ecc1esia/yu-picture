@@ -43,7 +43,7 @@ public interface PictureApplicationService extends IService<Picture> {
      * @param request
      * @return
      */
-    PictureVO getPictureVO(Picture picture, HttpServletRequest request);
+    PictureVO getPictureVO(Picture picture);
 
     /**
      * 获取图片包装类（分页）
@@ -52,7 +52,7 @@ public interface PictureApplicationService extends IService<Picture> {
      * @param request
      * @return
      */
-    Page<PictureVO> getPictureVOPage(Page<Picture> picturePage, HttpServletRequest request);
+    Page<PictureVO> getPictureVOPage(Page<Picture> picturePage);
 
     /**
      * 获取查询对象
@@ -111,14 +111,6 @@ public interface PictureApplicationService extends IService<Picture> {
      * @param loginUser
      */
     void editPicture(Picture pictureEditRequest, User loginUser);
-
-    /**
-     * 校验空间图片的权限
-     *
-     * @param loginUser
-     * @param picture
-     */
-    void checkPictureAuth(User loginUser, Picture picture);
 
     /**
      * 根据颜色搜索图片

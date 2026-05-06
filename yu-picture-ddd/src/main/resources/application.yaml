@@ -82,6 +82,8 @@ mybatis-plus:
 # 接口文档配置
 knife4j:
   enable: true
+  setting:
+    language: zh_cn
   openapi:
     title: 接口文档
     version: 1.0
@@ -102,3 +104,13 @@ cos:
 # 阿里云 AI 配置
 aliYunAi:
   apiKey: xxx
+# 以图搜图配置（支持 baidu / tineye）
+image:
+  search:
+    provider: tineye
+
+# TinEye API 配置（使用 Baidu 时无需配置）
+tineye:
+  api:
+    username:
+    password:

@@ -35,6 +35,20 @@ declare namespace API {
     message?: string
   }
 
+  type VectorSearchResultVO = {
+    pictureId?: number
+    name?: string
+    thumbnailUrl?: string
+    url?: string
+    score?: number
+  }
+
+  type BaseResponseListVectorSearchResultVO_ = {
+    code?: number
+    data?: VectorSearchResultVO[]
+    message?: string
+  }
+
   type BaseResponseListSpace_ = {
     code?: number
     data?: Space[]
@@ -198,6 +212,44 @@ declare namespace API {
   type GetOutPaintingTaskResponse = {
     output?: Output1
     requestId?: string
+  }
+
+  type CreateTextToImageTaskResponse = {
+    code?: string
+    message?: string
+    output?: Output
+    requestId?: string
+  }
+
+  type TextToImageResult = {
+    url?: string
+  }
+
+  type GetTextToImageTaskResponse = {
+    output?: {
+      taskId?: string
+      taskStatus?: string
+      submitTime?: string
+      scheduledTime?: string
+      endTime?: string
+      results?: TextToImageResult[]
+      code?: string
+      message?: string
+      taskMetrics?: TaskMetrics
+    }
+    requestId?: string
+  }
+
+  type BaseResponseCreateTextToImageTaskResponse_ = {
+    code?: number
+    data?: CreateTextToImageTaskResponse
+    message?: string
+  }
+
+  type BaseResponseGetTextToImageTaskResponse_ = {
+    code?: number
+    data?: GetTextToImageTaskResponse
+    message?: string
   }
 
   type getPictureByIdUsingGETParams = {

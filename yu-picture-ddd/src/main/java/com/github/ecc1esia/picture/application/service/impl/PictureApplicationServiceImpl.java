@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +29,6 @@ import java.util.stream.Collectors;
 
 /**
  * @author ecc1esia
- *  TODO
  */
 @Service
 public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Picture>
@@ -40,9 +40,6 @@ public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Pi
     @Resource
     private UserApplicationService userApplicationService;
 
-    /**
-     * @param picture
-     */
     @Override
     public void validPicture(Picture picture) {
         if (picture == null) {
@@ -51,25 +48,13 @@ public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Pi
         picture.validPicture();
     }
 
-    /**
-     * @param inputSource          文件输入源
-     * @param pictureUploadRequest
-     * @param loginUser
-     * @return
-     */
-
     @Override
     public PictureVO uploadPicture(Object inputSource, PictureUploadRequest pictureUploadRequest, User loginUser) {
         return pictureDomainService.uploadPicture(inputSource, pictureUploadRequest, loginUser);
     }
 
-    /**
-     * @param picture
-     * @param request
-     * @return
-     */
     @Override
-    public PictureVO getPictureVO(Picture picture, HttpServletRequest request) {
+    public PictureVO getPictureVO(Picture picture) {
         // 获取封装类
         PictureVO pictureVO = PictureVO.objToVo(picture);
         // 关联查询用户信息
@@ -82,13 +67,8 @@ public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Pi
         return pictureVO;
     }
 
-    /**
-     * @param picturePage
-     * @param request
-     * @return
-     */
     @Override
-    public Page<PictureVO> getPictureVOPage(Page<Picture> picturePage, HttpServletRequest request) {
+    public Page<PictureVO> getPictureVOPage(Page<Picture> picturePage) {
         List<Picture> pictureList = picturePage.getRecords();
         Page<PictureVO> pictureVOPage = new Page<>(picturePage.getCurrent(), picturePage.getSize(),
                 picturePage.getTotal());
@@ -109,7 +89,7 @@ public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Pi
             Long userId = pictureVO.getUserId();
             User user = null;
             if (userIdUserListMap.containsKey(userId)) {
-                user = userIdUserListMap.get(userId).get(0);
+                user = userIdUserListMap.get(userId).getFirst();
             }
             pictureVO.setUser(userApplicationService.getUserVO(user));
         });
@@ -117,19 +97,11 @@ public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Pi
         return pictureVOPage;
     }
 
-    /**
-     * @param pictureQueryRequest
-     * @return
-     */
     @Override
     public QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest) {
         return pictureDomainService.getQueryWrapper(pictureQueryRequest);
     }
 
-    /**
-     * @param pictureReviewRequest
-     * @param loginUser
-     */
     @Override
     public void doPictureReview(PictureReviewRequest pictureReviewRequest, User loginUser) {
         pictureDomainService.doPictureReview(pictureReviewRequest, loginUser);
@@ -137,38 +109,23 @@ public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Pi
 
     /**
      * 填充审核参数
-     *
-     * @param picture
-     * @param loginUser
      */
     @Override
     public void fillReviewParams(Picture picture, User loginUser) {
         pictureDomainService.fillReviewParams(picture, loginUser);
     }
 
-    /**
-     * @param pictureUploadByBatchRequest
-     * @param loginUser
-     * @return
-     */
     @Override
     public Integer uploadPictureByBatch(PictureUploadByBatchRequest pictureUploadByBatchRequest, User loginUser) {
         return pictureDomainService.uploadPictureByBatch(pictureUploadByBatchRequest, loginUser);
     }
 
-    /**
-     * @param oldPicture
-     */
     @Async
     @Override
     public void clearPictureFile(Picture oldPicture) {
         pictureDomainService.clearPictureFile(oldPicture);
     }
 
-    /**
-     * @param pictureId
-     * @param loginUser
-     */
     @Override
     public void deletePicture(long pictureId, User loginUser) {
         pictureDomainService.deletePicture(pictureId, loginUser);
@@ -179,40 +136,17 @@ public class PictureApplicationServiceImpl extends ServiceImpl<PictureMapper, Pi
         pictureDomainService.editPicture(picture, loginUser);
     }
 
-    /**
-     * @param loginUser
-     * @param picture
-     */
-    @Override
-    public void checkPictureAuth(User loginUser, Picture picture) {
-        pictureDomainService.checkPictureAuth(loginUser, picture);
-    }
 
-    /**
-     * @param spaceId
-     * @param picColor
-     * @param loginUser
-     * @return
-     */
     @Override
     public List<PictureVO> searchPictureByColor(Long spaceId, String picColor, User loginUser) {
         return pictureDomainService.searchPictureByColor(spaceId, picColor, loginUser);
     }
 
-    /**
-     * @param pictureEditByBatchRequest
-     * @param loginUser
-     */
     @Override
     public void editPictureByBatch(PictureEditByBatchRequest pictureEditByBatchRequest, User loginUser) {
         pictureDomainService.editPictureByBatch(pictureEditByBatchRequest, loginUser);
     }
 
-    /**
-     * @param createPictureOutPaintingTaskRequest
-     * @param loginUser
-     * @return
-     */
     @Override
     public CreateOutPaintingTaskResponse createPictureOutPaintingTask(
             CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest, User loginUser) {

@@ -15,6 +15,8 @@ import SpaceManagePage from '@/pages/admin/SpaceManagePage.vue'
 import AddSpacePage from '@/pages/AddSpacePage.vue'
 import AddPictureBatchPage from '@/pages/AddPictureBatchPage.vue'
 import SpaceUserManagePage from '@/pages/admin/SpaceUserManagePage.vue'
+import TextToImagePage from '@/pages/TextToImagePage.vue'
+import WatermarkPage from '@/pages/WatermarkPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -101,6 +103,16 @@ const router = createRouter({
       path: '/user_exchange_vip',
       name: '用户兑换会员',
       component: UserExchangeVipPage,
+    },
+    {
+      path: '/ai/generate',
+      name: 'AI 文生图',
+      component: TextToImagePage,
+    },
+    {
+      path: '/watermark',
+      name: '隐形水印',
+      component: WatermarkPage,
     },
     {
       path: '/about',

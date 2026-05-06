@@ -5,7 +5,7 @@ import request from '@/request'
 /** deletePicture POST /api/picture/delete */
 export async function deletePictureUsingPost(
   body: API.DeleteRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseBoolean_>('/api/picture/delete', {
     method: 'POST',
@@ -20,7 +20,7 @@ export async function deletePictureUsingPost(
 /** editPicture POST /api/picture/edit */
 export async function editPictureUsingPost(
   body: API.PictureEditRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseBoolean_>('/api/picture/edit', {
     method: 'POST',
@@ -35,7 +35,7 @@ export async function editPictureUsingPost(
 /** editPictureByBatch POST /api/picture/edit/batch */
 export async function editPictureByBatchUsingPost(
   body: API.PictureEditByBatchRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseBoolean_>('/api/picture/edit/batch', {
     method: 'POST',
@@ -51,7 +51,7 @@ export async function editPictureByBatchUsingPost(
 export async function getPictureByIdUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.getPictureByIdUsingGETParams,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePicture_>('/api/picture/get', {
     method: 'GET',
@@ -66,7 +66,7 @@ export async function getPictureByIdUsingGet(
 export async function getPictureVoByIdUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.getPictureVOByIdUsingGETParams,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePictureVO_>('/api/picture/get/vo', {
     method: 'GET',
@@ -80,7 +80,7 @@ export async function getPictureVoByIdUsingGet(
 /** listPictureByPage POST /api/picture/list/page */
 export async function listPictureByPageUsingPost(
   body: API.PictureQueryRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePagePicture_>('/api/picture/list/page', {
     method: 'POST',
@@ -95,7 +95,7 @@ export async function listPictureByPageUsingPost(
 /** listPictureVOByPage POST /api/picture/list/page/vo */
 export async function listPictureVoByPageUsingPost(
   body: API.PictureQueryRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePagePictureVO_>('/api/picture/list/page/vo', {
     method: 'POST',
@@ -110,7 +110,7 @@ export async function listPictureVoByPageUsingPost(
 /** listPictureVOByPageWithCache POST /api/picture/list/page/vo/cache */
 export async function listPictureVoByPageWithCacheUsingPost(
   body: API.PictureQueryRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePagePictureVO_>('/api/picture/list/page/vo/cache', {
     method: 'POST',
@@ -125,7 +125,7 @@ export async function listPictureVoByPageWithCacheUsingPost(
 /** createPictureOutPaintingTask POST /api/picture/out_painting/create_task */
 export async function createPictureOutPaintingTaskUsingPost(
   body: API.CreatePictureOutPaintingTaskRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseCreateOutPaintingTaskResponse_>(
     '/api/picture/out_painting/create_task',
@@ -136,7 +136,7 @@ export async function createPictureOutPaintingTaskUsingPost(
       },
       data: body,
       ...(options || {}),
-    }
+    },
   )
 }
 
@@ -144,7 +144,7 @@ export async function createPictureOutPaintingTaskUsingPost(
 export async function getPictureOutPaintingTaskUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.getPictureOutPaintingTaskUsingGETParams,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseGetOutPaintingTaskResponse_>(
     '/api/picture/out_painting/get_task',
@@ -154,14 +154,14 @@ export async function getPictureOutPaintingTaskUsingGet(
         ...params,
       },
       ...(options || {}),
-    }
+    },
   )
 }
 
 /** doPictureReview POST /api/picture/review */
 export async function doPictureReviewUsingPost(
   body: API.PictureReviewRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseBoolean_>('/api/picture/review', {
     method: 'POST',
@@ -176,7 +176,7 @@ export async function doPictureReviewUsingPost(
 /** searchPictureByColor POST /api/picture/search/color */
 export async function searchPictureByColorUsingPost(
   body: API.SearchPictureByColorRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseListPictureVO_>('/api/picture/search/color', {
     method: 'POST',
@@ -191,7 +191,7 @@ export async function searchPictureByColorUsingPost(
 /** searchPictureByPicture POST /api/picture/search/picture */
 export async function searchPictureByPictureUsingPost(
   body: API.SearchPictureByPictureRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseListImageSearchResult_>('/api/picture/search/picture', {
     method: 'POST',
@@ -207,15 +207,17 @@ export async function searchPictureByPictureUsingPost(
 export async function searchVectorByUpload(
   file: File,
   spaceId: number,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   const formData = new FormData()
   formData.append('file', file)
   formData.append('spaceId', spaceId.toString())
-  return request<API.BaseResponseListPictureVO_>('/api/picture/search/vector/by-upload', {
+  return request<API.BaseResponseListVectorSearchResultVO_>('/api/picture/search/vector/by-upload', {
     method: 'POST',
     data: formData,
-    requestType: 'form',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
     ...(options || {}),
   })
 }
@@ -224,15 +226,29 @@ export async function searchVectorByUpload(
 export async function searchVectorByPicture(
   pictureId: number,
   spaceId: number,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseListPictureVO_>('/api/picture/search/vector/by-picture', {
+  return request<API.BaseResponseListVectorSearchResultVO_>('/api/picture/search/vector/by-picture', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     data: {
       pictureId,
+      spaceId,
+    },
+    ...(options || {}),
+  })
+}
+
+/** reindexAllPictures POST /api/picture/search/vector/reindex */
+export async function reindexAllPictures(
+  spaceId: number,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseString_>('/api/picture/search/vector/reindex', {
+    method: 'POST',
+    params: {
       spaceId,
     },
     ...(options || {}),
@@ -250,7 +266,7 @@ export async function listPictureTagCategoryUsingGet(options?: { [key: string]: 
 /** updatePicture POST /api/picture/update */
 export async function updatePictureUsingPost(
   body: API.PictureUpdateRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseBoolean_>('/api/picture/update', {
     method: 'POST',
@@ -268,7 +284,7 @@ export async function uploadPictureUsingPost(
   params: API.uploadPictureUsingPOSTParams,
   body: API.uploadPictureUsingPOSTParams,
   file?: File,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   const formData = new FormData()
 
@@ -305,7 +321,7 @@ export async function uploadPictureUsingPost(
 /** uploadPictureByBatch POST /api/picture/upload/batch */
 export async function uploadPictureByBatchUsingPost(
   body: API.PictureUploadByBatchRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseInt_>('/api/picture/upload/batch', {
     method: 'POST',
@@ -320,7 +336,7 @@ export async function uploadPictureByBatchUsingPost(
 /** uploadPictureByUrl POST /api/picture/upload/url */
 export async function uploadPictureByUrlUsingPost(
   body: API.PictureUploadRequest,
-  options?: { [key: string]: any }
+  options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePictureVO_>('/api/picture/upload/url', {
     method: 'POST',

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 图片向量仓储实现（ES）
@@ -88,7 +89,7 @@ public class PictureVectorRepositoryImpl implements PictureVectorRepository {
                 vectorList.add(v);
             }
 
-            // ES 8.x KNN搜索
+            // ES 8.x KNN搜索（使用 filter 在 ES 层预过滤 spaceId，避免 Java 端过滤）
             SearchResponse<PictureVectorRecord> response = elasticsearchClient.search(SearchRequest.of(s -> s
                             .index(INDEX_NAME)
                             .knn(k -> k
@@ -96,25 +97,26 @@ public class PictureVectorRepositoryImpl implements PictureVectorRepository {
                                     .queryVector(vectorList)
                                     .k(topK)
                                     .numCandidates(topK * 2)
+                                    .filter(f -> f
+                                            .term(t -> t
+                                                    .field("spaceId")
+                                                    .value(spaceId)
+                                            )
+                                    )
                             )
                             .size(topK)
                     ),
                     PictureVectorRecord.class
             );
 
-            List<PictureVectorRecord> results = new ArrayList<>();
-            for (Hit<PictureVectorRecord> hit : response.hits().hits()) {
+            return response.hits().hits().stream().map(hit -> {
                 PictureVectorRecord record = hit.source();
                 if (record != null) {
-                    // 设置相似度分数
-                    record.setScore(hit.score() != null ? hit.score().doubleValue() : 0.0);
-                    // 过滤 spaceId
-                    if (spaceId.equals(record.getSpaceId())) {
-                        results.add(record);
-                    }
+                    record.setScore(hit.score() != null ? hit.score() : 0.0);
+                    return record;
                 }
-            }
-            return results;
+                return null;
+            }).filter(Objects::nonNull).toList();
         } catch (IOException e) {
             log.error("向量搜索失败, spaceId={}", spaceId, e);
             throw new RuntimeException("向量搜索失败", e);
